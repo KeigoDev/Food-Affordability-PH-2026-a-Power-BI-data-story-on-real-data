@@ -1,0 +1,180 @@
+// STAGE 4 - CALCULATE (DAX)
+// Tables come from power_query.m (stage 2). Relationships are in README stage 3.
+// Paste each measure via Modeling > New measure (home table: _Measures).
+// With no region selected, measures show the Philippines (national) figure.
+
+// ---------- Calendar (Modeling > New table) ----------
+// Calendar =
+// ADDCOLUMNS (
+//     CALENDAR ( DATE ( 2023, 1, 1 ), DATE ( 2026, 12, 31 ) ),
+//     "Year", YEAR ( [Date] ),
+//     "Month Start", DATE ( YEAR ( [Date] ), MONTH ( [Date] ), 1 ),
+//     "Month", FORMAT ( [Date], "mmm yyyy" ),
+//     "Month Number", YEAR ( [Date] ) * 100 + MONTH ( [Date] ),
+//     "Quarter", YEAR ( [Date] ) & " Q" & QUARTER ( [Date] )
+// )
+// Then: Table tools > Mark as date table (Date), and sort "Month" by "Month Number".
+
+// ---------- Helpers ----------
+Selected Region Key = IF ( HASONEVALUE ( Region[region_key] ), VALUES ( Region[region_key] ), "PH" )
+
+Latest Month = CALCULATE ( MAX ( Inflation[month] ), REMOVEFILTERS () )
+
+Year Ago Month = EDATE ( [Latest Month], -12 )
+
+// ---------- Rice price (PSA retail, regular-milled, PHP/kg) ----------
+Rice Price =
+VAR k = [Selected Region Key]
+RETURN CALCULATE ( AVERAGE ( RicePrice[price_php_kg] ), Region[region_key] = k )
+
+Rice Price (Latest) =
+VAR m = [Latest Month]
+RETURN CALCULATE ( [Rice Price], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+Rice Price (Year Ago) =
+VAR m = [Year Ago Month]
+RETURN CALCULATE ( [Rice Price], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+Rice Price Change YoY % = DIVIDE ( [Rice Price (Latest)] - [Rice Price (Year Ago)], [Rice Price (Year Ago)] )
+
+Rice Price (Low) =
+VAR k = [Selected Region Key]
+RETURN CALCULATE ( MIN ( RicePrice[price_php_kg] ), REMOVEFILTERS ( 'Calendar' ), Region[region_key] = k )
+
+// ---------- Inflation (PSA CPI, % vs a year earlier) ----------
+Headline Inflation =
+VAR k = [Selected Region Key]
+RETURN CALCULATE ( AVERAGE ( Inflation[yoy_pct] ), Inflation[item] = "All items", Region[region_key] = k )
+
+Food Inflation =
+VAR k = [Selected Region Key]
+RETURN CALCULATE ( AVERAGE ( Inflation[yoy_pct] ), Inflation[item] = "Food", Region[region_key] = k )
+
+Rice Inflation =
+VAR k = [Selected Region Key]
+RETURN CALCULATE ( AVERAGE ( Inflation[yoy_pct] ), Inflation[item] = "Rice", Region[region_key] = k )
+
+Headline Inflation (Latest) =
+VAR m = [Latest Month]
+RETURN CALCULATE ( [Headline Inflation], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+Food Inflation (Latest) =
+VAR m = [Latest Month]
+RETURN CALCULATE ( [Food Inflation], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+Rice Inflation (Latest) =
+VAR m = [Latest Month]
+RETURN CALCULATE ( [Rice Inflation], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+Rice Inflation (National Latest) = CALCULATE ( [Rice Inflation (Latest)], REMOVEFILTERS ( Region ), Region[region_key] = "PH" )
+
+Rice Inflation vs National (pts) = [Rice Inflation (Latest)] - [Rice Inflation (National Latest)]
+
+// Same as Rice Inflation (Latest) but blank for the national row, for the region bar chart
+Regional Rice Inflation =
+    IF ( [Selected Region Key] = "PH", BLANK (), [Rice Inflation (Latest)] )
+
+Rice Pressure Flag =IF ( [Rice Inflation vs National (pts)] > 0, "Above national", "At or below national" )
+
+// BSP inflation target band (2% to 4%)
+Inflation Target Low = 2
+Inflation Target High = 4
+
+Months Above Target =
+COUNTROWS (
+    FILTER (
+        CALCULATETABLE ( Inflation, Inflation[item] = "All items", Region[region_key] = "PH" ),
+        Inflation[yoy_pct] > [Inflation Target High]
+    )
+)
+
+Inflation Status =
+VAR v = [Headline Inflation (Latest)]
+RETURN IF ( v > [Inflation Target High], "Above target", IF ( v < [Inflation Target Low], "Below target", "Within target" ) )
+
+// ---------- Peso and the strong dollar ----------
+USD PHP = AVERAGE ( FX[usd_php] )
+
+USD PHP (Latest) =
+VAR m = [Latest Month]
+RETURN CALCULATE ( [USD PHP], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+USD PHP (Year Ago) =
+VAR m = [Year Ago Month]
+RETURN CALCULATE ( [USD PHP], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+// Positive = weaker peso (each dollar costs more pesos)
+Peso Weakening YoY % = DIVIDE ( [USD PHP (Latest)] - [USD PHP (Year Ago)], [USD PHP (Year Ago)] )
+
+Peso Purchasing Power = AVERAGE ( PesoPower[peso_power] )
+
+Peso Purchasing Power (Latest) =
+VAR m = [Latest Month]
+RETURN CALCULATE ( [Peso Purchasing Power], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+// ---------- GDP (PSA, real growth % vs same quarter a year earlier) ----------
+GDP Growth = AVERAGE ( GDP[gdp_growth_pct] )
+
+Latest GDP Quarter = CALCULATE ( MAX ( GDP[quarter_start] ), REMOVEFILTERS () )
+
+GDP Growth (Latest) =
+VAR q = [Latest GDP Quarter]
+RETURN CALCULATE ( [GDP Growth], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = q )
+
+GDP Growth (Year Earlier) =
+VAR q = EDATE ( [Latest GDP Quarter], -12 )
+RETURN CALCULATE ( [GDP Growth], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = q )
+
+GDP Slowdown (pts) = [GDP Growth (Latest)] - [GDP Growth (Year Earlier)]
+
+Latest GDP Quarter Label =
+VAR q = [Latest GDP Quarter]
+RETURN CALCULATE ( MAX ( GDP[quarter] ), REMOVEFILTERS (), GDP[quarter_start] = q )
+
+// ---------- Hunger (SWS, % of families) ----------
+Hunger Rate = AVERAGE ( Hunger[hunger_pct] )
+
+Hunger Rate (Latest) =
+VAR s = CALCULATE ( MAX ( Hunger[month] ), REMOVEFILTERS () )
+RETURN CALCULATE ( [Hunger Rate], REMOVEFILTERS (), Hunger[month] = s )
+
+Hunger Rate (Low) = CALCULATE ( MIN ( Hunger[hunger_pct] ), REMOVEFILTERS () )
+
+// ---------- NCR wage vs rice ----------
+// Wage order in force mid-month (orders take effect mid-month)
+NCR Min Wage =
+VAR d = MIN ( 'Calendar'[Date] ) + 14
+VAR eff = CALCULATE ( MAX ( Wage[effective_date] ), REMOVEFILTERS ( Wage ), Wage[effective_date] <= d )
+RETURN CALCULATE ( MAX ( Wage[daily_wage_php] ), REMOVEFILTERS ( Wage ), Wage[effective_date] = eff )
+
+NCR Rice Price = CALCULATE ( AVERAGE ( RicePrice[price_php_kg] ), REMOVEFILTERS ( Region ), Region[region_key] = "NCR" )
+
+Kg Rice per NCR Wage = DIVIDE ( [NCR Min Wage], [NCR Rice Price] )
+
+Kg Rice per NCR Wage (Latest) =
+VAR m = [Latest Month]
+RETURN CALCULATE ( [Kg Rice per NCR Wage], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
+
+Kg Rice per NCR Wage (Peak) =
+VAR lastM = [Latest Month]
+VAR months = CALCULATETABLE ( VALUES ( 'Calendar'[Month Start] ), REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] <= lastM )
+RETURN
+    MAXX (
+        months,
+        VAR ms = 'Calendar'[Month Start]
+        RETURN CALCULATE ( [Kg Rice per NCR Wage], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Month Start] = ms )
+    )
+
+// ---------- Story headlines (bind to text boxes or cards) ----------
+Headline =
+"Inflation " & FORMAT ( [Headline Inflation (Latest)], "0.0" ) & "% · rice "
+    & FORMAT ( [Rice Inflation (Latest)], "+0.0;-0.0" ) & "% · ₱"
+    & FORMAT ( [USD PHP (Latest)], "0.00" ) & " per US$"
+
+Economy Headline =
+"GDP grew " & FORMAT ( [GDP Growth (Latest)], "0.0" ) & "% in " & [Latest GDP Quarter Label]
+    & ", down " & FORMAT ( -[GDP Slowdown (pts)], "0.0" ) & " pts from a year earlier"
+
+// Conditional-formatting colours (Format > fx > Field value)
+Inflation Colour = IF ( [Headline Inflation] > [Inflation Target High], "#B91C1C", "#15803D" )
+Rice Pressure Colour = IF ( [Rice Inflation vs National (pts)] > 0, "#B91C1C", "#64748B" )

@@ -1,0 +1,19 @@
+region_key,region,island_group,rice_price_php_kg,rice_price_year_ago,rice_price_change_pct,rice_inflation_pct,food_inflation_pct,headline_inflation_pct
+NCR,NCR,Luzon,46.58,39.63,17.5,13.4,4.9,5.4
+CAR,CAR,Luzon,49.73,40.7,22.2,18.2,7.3,8.2
+R01,Ilocos,Luzon,46.18,36.76,25.6,21.1,6.9,6.4
+R02,Cagayan Valley,Luzon,44.56,32.52,37.0,28.6,5.9,7.2
+R03,Central Luzon,Luzon,48.91,38.3,27.7,24.6,6.9,7.6
+R4A,CALABARZON,Luzon,48.79,39.94,22.2,15.4,5.4,7.2
+R4B,MIMAROPA,Luzon,48.59,42.12,15.4,16.4,4.8,5.9
+R05,Bicol,Luzon,50.96,38.2,33.4,29.3,7.2,8.6
+R06,Western Visayas,Visayas,50.81,39.96,27.2,30.0,8.6,9.2
+NIR,Negros Island,Visayas,53.85,43.77,23.0,10.7,6.3,6.9
+R07,Central Visayas,Visayas,51.61,42.92,20.2,14.1,9.3,8.3
+R08,Eastern Visayas,Visayas,51.05,41.73,22.3,21.1,7.4,8.2
+R09,Zamboanga Peninsula,Mindanao,50.53,42.34,19.3,22.5,8.4,7.7
+R10,Northern Mindanao,Mindanao,50.49,42.35,19.2,21.2,6.3,6.6
+R11,Davao,Mindanao,53.05,40.81,30.0,24.3,10.5,8.7
+R12,SOCCSKSARGEN,Mindanao,48.5,38.57,25.7,24.9,8.5,7.9
+R13,Caraga,Mindanao,51.87,40.43,28.3,25.0,10.3,9.0
+BARMM,BARMM,Mindanao,51.6,40.91,26.1,25.7,11.3,9.7

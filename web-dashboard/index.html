@@ -1,0 +1,590 @@
+<style>
+.fa { font-family: var(--font-sans); color: var(--color-fg); max-width: 80rem; margin-inline: auto; }
+.fa h1 { font-family: var(--font-serif); font-weight: 400; font-size: var(--ui-font-size-title); margin: 0; }
+.fa .brand { display: flex; align-items: center; gap: var(--ui-gap-md); margin-bottom: var(--ui-gap-sm); }
+.fa .logo { width: 44px; height: 44px; flex: none; }
+.fa .kicker { font-size: var(--ui-font-size-caption); color: #C2410C; font-weight: var(--ui-font-weight-medium); letter-spacing: .04em; }
+.fa .srcline { font-size: var(--ui-font-size-caption); color: var(--color-fg-muted); margin: 0 0 var(--ui-gap-md); }
+.fa .srcline .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--color-ok); margin-right: 6px; }
+/* page tabs, like Power BI report pages */
+.fa .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--color-border-line); overflow-x: auto; margin-bottom: var(--ui-gap-md); }
+.fa .tabs button { font: inherit; font-size: var(--ui-font-size-body); color: var(--color-fg-muted); background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 14px; cursor: pointer; white-space: nowrap; }
+.fa .tabs button[aria-selected=true] { color: var(--color-fg); border-bottom-color: #C2410C; font-weight: var(--ui-font-weight-medium); }
+/* slicer bar */
+.fa .slicers { display: flex; flex-wrap: wrap; align-items: end; gap: var(--ui-gap-md); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--ui-radius); padding: var(--ui-pad-sm) var(--ui-pad-lg); margin-bottom: var(--ui-gap-md); }
+.fa .slicer { display: flex; flex-direction: column; gap: 4px; font-size: var(--ui-font-size-caption); color: var(--color-fg-muted); }
+.fa .slicer select { font: inherit; font-size: var(--ui-font-size-body); color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: 6px; padding: 4px 8px; }
+.fa .chips { display: flex; flex-wrap: wrap; gap: var(--ui-gap-xs); }
+.fa .chips button, .fa .reset { font: inherit; font-size: var(--ui-font-size-caption); color: var(--color-fg); background: none; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+.fa .chips button[aria-pressed=true] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+.fa .reset { margin-left: auto; }
+.fa .page[hidden], .fa .slicers[hidden] { display: none; }
+.fa .page h2 { font-size: var(--ui-font-size-heading); font-weight: var(--ui-font-weight-medium); margin: 0 0 var(--ui-gap-xs); }
+.fa .story { color: var(--color-fg-muted); max-width: 56rem; margin: 0 0 var(--ui-gap-md); line-height: 1.5; }
+.fa .story b { font-weight: 600; color: var(--color-fg); }
+.fa .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: var(--ui-gap-md); margin-bottom: var(--ui-gap-md); }
+.fa .tile, .fa .card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--ui-radius); padding: var(--ui-pad-lg); }
+.fa .tile { border-top: 3px solid var(--color-border-line); }
+.fa .tile.t-rice { border-top-color: #C2410C; } .fa .tile.t-bad { border-top-color: var(--color-bad); }
+.fa .tile.t-fx { border-top-color: #2563EB; } .fa .tile.t-muted { border-top-color: var(--ui-chart-muted); } .fa .tile.t-ok { border-top-color: var(--color-ok); }
+.fa .tile .lbl { font-size: var(--ui-font-size-caption); color: var(--color-fg-muted); }
+.fa .tile .num { font-family: var(--font-serif); font-weight: 400; font-size: var(--ui-font-size-title); font-variant-numeric: tabular-nums; margin: var(--ui-gap-xs) 0; }
+.fa .tile .sub { font-size: var(--ui-font-size-caption); color: var(--color-fg-muted); }
+.fa .bad { color: var(--color-bad); }
+.fa .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--ui-gap-md); margin-bottom: var(--ui-gap-md); }
+.fa .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: var(--ui-gap-md); margin-bottom: var(--ui-gap-md); }
+.fa .card h3 { font-size: var(--ui-font-size-body); font-weight: var(--ui-font-weight-medium); margin: 0; }
+.fa .card .note { font-size: var(--ui-font-size-caption); color: var(--color-fg-muted); margin: 2px 0 var(--ui-gap-sm); }
+.fa .chart { position: relative; min-height: 240px; }
+.fa .tip { position: absolute; pointer-events: none; background: var(--ui-surface-popover); border: 1px solid var(--ui-border); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow-popover); padding: var(--ui-pad-xs) var(--ui-pad-sm); font-size: var(--ui-font-size-caption); white-space: nowrap; display: none; z-index: 2; }
+.fa .tip .d { color: var(--ui-text-secondary); }
+.fa .sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; }
+.fa .fail { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 240px; color: var(--color-fg-muted); font-size: var(--ui-font-size-caption); }
+.fa .fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+.fa .empty { display: flex; align-items: center; justify-content: center; min-height: 240px; color: var(--color-fg-muted); font-size: var(--ui-font-size-caption); }
+.fa .events { list-style: none; margin: var(--ui-gap-sm) 0 0; padding: 0; font-size: var(--ui-font-size-caption); color: var(--color-fg-muted); }
+.fa .events li { margin: 2px 0; }
+.fa .events .n { display: inline-block; width: 16px; height: 16px; line-height: 16px; text-align: center; border-radius: 50%; background: var(--ui-chart-grid); color: var(--color-fg); margin-right: 6px; font-size: 10px; }
+.fa .hint { font-size: var(--ui-font-size-caption); color: var(--color-fg-muted); margin: 0 0 var(--ui-gap-sm); min-height: 1.4em; }
+.fa .hint button { font: inherit; color: inherit; background: none; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 0 8px; margin-left: 6px; cursor: pointer; }
+.fa .tablewrap { overflow-x: auto; }
+.fa table { width: 100%; border-collapse: collapse; font-size: var(--ui-font-size-caption); font-variant-numeric: tabular-nums; }
+.fa th { text-align: left; color: var(--color-fg-muted); font-weight: var(--ui-font-weight-medium); padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.fa th button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.fa th[aria-sort=descending] button::after { content: " ↓"; } .fa th[aria-sort=ascending] button::after { content: " ↑"; }
+.fa td { padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); }
+.fa td.n, .fa th.n { text-align: right; }
+.fa #region-table tbody tr { cursor: pointer; }
+.fa #region-table tbody tr:hover td, .fa #region-table tbody tr.sel td { background: var(--ui-chart-grid); }
+.fa #region-table tbody tr.sel td { font-weight: var(--ui-font-weight-medium); }
+.fa #region-table tbody.has-sel tr:not(.sel) { opacity: .45; }
+.fa .pill { border-radius: 999px; padding: 1px 8px; border: 1px solid var(--color-border-line); white-space: nowrap; }
+.fa .pill.hot { color: var(--color-bad); border-color: currentColor; }
+.fa .hbar, .fa .vbar { cursor: pointer; }
+.fa .stages { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: var(--ui-gap-sm); }
+.fa .stage { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--ui-radius); padding: var(--ui-pad-lg); }
+.fa .stage .no { font-family: var(--font-serif); font-size: var(--ui-font-size-title); color: #C2410C; line-height: 1; }
+.fa .stage h4 { margin: var(--ui-gap-xs) 0 2px; font-size: var(--ui-font-size-body); font-weight: var(--ui-font-weight-medium); }
+.fa .stage .tool { font-size: var(--ui-font-size-caption); color: var(--color-fg); margin-bottom: var(--ui-gap-xs); }
+.fa .stage p { margin: 0; font-size: var(--ui-font-size-caption); color: var(--color-fg-muted); line-height: 1.45; }
+@media (max-width: 40rem) { .fa .hide-sm { display: none; } .fa .reset { margin-left: 0; } }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--ui-dur-slow); }
+</style>
+
+<div class="fa">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="14" fill="#C2410C"/>
+      <ellipse cx="22" cy="27" rx="3" ry="5.5" fill="#FFF7ED" transform="rotate(-25 22 27)"/>
+      <ellipse cx="32" cy="24" rx="3" ry="5.5" fill="#FFF7ED"/>
+      <ellipse cx="42" cy="27" rx="3" ry="5.5" fill="#FFF7ED" transform="rotate(25 42 27)"/>
+      <path d="M10 33h44c0 11-9.8 19-22 19S10 44 10 33z" fill="#FFF7ED"/>
+      <path d="M17 45l8-5 6 3 10-8M37 35h5v5" fill="none" stroke="#C2410C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div><div class="kicker">Food Affordability PH · interactive dashboard</div>
+    <h1 id="top">The 2026 rice shock in the Philippines</h1></div>
+  </div>
+  <p class="srcline"><span class="dot"></span>Real data: PSA, ECB, SWS, DOLE wage boards, Department of Agriculture · latest month <span data-source="kpi" data-field="latest_label">—</span> · same pages, measures and slicers as the Power BI report</p>
+
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-page="economy">1 · Bigger picture</button>
+    <button role="tab" data-page="rice">2 · The rice shock</button>
+    <button role="tab" data-page="hunger">3 · Hunger</button>
+    <button role="tab" data-page="regions">4 · Where it hurts most</button>
+    <button role="tab" data-page="process">How it was built</button>
+  </div>
+
+  <div class="slicers" id="time-slicers">
+    <label class="slicer">From <select id="from-month"></select></label>
+    <label class="slicer">To <select id="to-month"></select></label>
+    <div class="slicer">Quick range <div class="chips" id="quick-range"></div></div>
+    <button class="reset" id="reset">Reset filters</button>
+  </div>
+
+  <section class="page" id="economy" role="tabpanel">
+    <h2>Growth is slowing, the dollar is strong, and inflation is back</h2>
+    <p class="story">Real GDP growth fell from <b data-source="kpi" data-field="gdp_ya">—</b>% to <b data-source="kpi" data-field="gdp">—</b>% in a year. A weaker peso makes imported rice and fuel cost more, and ₱1 from 2018 now buys ₱<b data-source="kpi" data-field="power">—</b> worth of goods. Use the date slicer to zoom the charts.</p>
+    <div class="tiles">
+      <div class="tile t-muted"><div class="lbl">GDP growth, <span data-source="kpi" data-field="gdp_q">—</span></div><div class="num"><span data-source="kpi" data-field="gdp">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="gdp_ya">—</span>% a year earlier</div></div>
+      <div class="tile t-fx"><div class="lbl">Pesos per US dollar</div><div class="num">₱<span data-source="kpi" data-field="usd">—</span></div><div class="sub">monthly average, latest month</div></div>
+      <div class="tile t-fx"><div class="lbl">Peso vs a year ago</div><div class="num bad"><span data-source="kpi" data-field="peso_weaker_pct">—</span>% weaker</div><div class="sub">ECB reference rates</div></div>
+      <div class="tile t-bad"><div class="lbl">Headline inflation</div><div class="num bad"><span data-source="kpi" data-field="infl">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="infl_ya">—</span>% · target 2–4%</div></div>
+      <div class="tile t-muted"><div class="lbl">Purchasing power of ₱1</div><div class="num">₱<span data-source="kpi" data-field="power">—</span></div><div class="sub">2018 = ₱1.00</div></div>
+    </div>
+    <div class="grid3">
+      <div class="card"><h3>GDP growth by quarter</h3><p class="note">Real GDP, % vs same quarter a year earlier · PSA</p><div class="chart" id="gdp-chart" data-source="gdp"></div></div>
+      <div class="card"><h3>Pesos per US dollar</h3><p class="note">Monthly average · higher = stronger dollar · ECB</p><div class="chart" id="fx-chart" data-source="nat"></div></div>
+      <div class="card"><h3>Inflation: headline vs food</h3><p class="note">% vs a year earlier · shaded: BSP 2–4% target · PSA</p><div class="chart" id="infl-chart" data-source="nat"></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="rice" role="tabpanel" hidden>
+    <h2>Import policy swung rice prices down, then sharply up</h2>
+    <p class="story">After the import tariff was cut, retail rice fell to ₱<b data-source="kpi" data-field="rice_low">—</b>/kg. Imports were then suspended and a new tariff started, and prices jumped back to ₱<b data-source="kpi" data-field="rice_price">—</b>. Hover a chart for monthly values.</p>
+    <div class="tiles">
+      <div class="tile t-rice"><div class="lbl">Rice, regular-milled</div><div class="num">₱<span data-source="kpi" data-field="rice_price">—</span></div><div class="sub">per kg, latest month</div></div>
+      <div class="tile t-rice"><div class="lbl">Rice price vs a year ago</div><div class="num bad">+<span data-source="kpi" data-field="rice_change_pct">—</span>%</div><div class="sub">PSA retail prices</div></div>
+      <div class="tile t-bad"><div class="lbl">Rice inflation</div><div class="num bad">+<span data-source="kpi" data-field="rice_infl">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="rice_infl_ya">—</span>% a year earlier</div></div>
+      <div class="tile t-rice"><div class="lbl">Kg of rice per NCR wage day</div><div class="num"><span data-source="kpi" data-field="kg">—</span> kg</div><div class="sub">latest month</div></div>
+      <div class="tile t-ok"><div class="lbl">Best point</div><div class="num"><span data-source="kpi" data-field="kg_peak">—</span> kg</div><div class="sub">when rice was cheapest</div></div>
+    </div>
+    <div class="grid">
+      <div class="card"><h3>Rice retail price, Philippines</h3><p class="note">Regular-milled, ₱ per kg · numbered lines: policy changes · PSA</p>
+        <div class="chart" id="rice-chart" data-source="nat"></div>
+        <ul class="events" id="events-list" data-source="events"></ul></div>
+      <div class="card"><h3>Kg of rice one NCR minimum-wage day buys</h3><p class="note">NCR daily minimum wage ÷ NCR rice price · DOLE, PSA</p><div class="chart" id="kg-chart" data-source="nat"></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="hunger" role="tabpanel" hidden>
+    <h2>Hunger stays stubbornly high</h2>
+    <p class="story">SWS finds <b data-source="kpi" data-field="hunger">—</b>% of families went hungry in the latest survey. It never fell below <b data-source="kpi" data-field="hunger_low">—</b>% even when rice was cheapest. Click a bar to compare it with the latest survey.</p>
+    <div class="tiles">
+      <div class="tile t-bad"><div class="lbl">Families going hungry, <span data-source="kpi" data-field="hunger_survey">—</span></div><div class="num"><span data-source="kpi" data-field="hunger">—</span>%</div><div class="sub">SWS, past three months</div></div>
+      <div class="tile t-muted"><div class="lbl">Lowest in this period</div><div class="num"><span data-source="kpi" data-field="hunger_low">—</span>%</div><div class="sub">SWS surveys since Mar 2025</div></div>
+    </div>
+    <p class="hint" id="hunger-hint"></p>
+    <div class="card"><h3>Families experiencing involuntary hunger</h3><p class="note">% of families, per SWS survey · click a bar</p><div class="chart" id="hunger-chart" data-source="hunger"></div></div>
+  </section>
+
+  <section class="page" id="regions" role="tabpanel" hidden>
+    <h2>Rice inflation by region: where relief should go first</h2>
+    <p class="story"><b data-source="above" data-field="n">—</b> of <b data-source="above" data-field="total">—</b> regions have rice inflation above the national rate. Pick an island group, then click a bar or a row: the cards switch to that region, like cross-filtering in Power BI.</p>
+    <div class="slicers">
+      <div class="slicer">Island group <div class="chips" id="island-filter"></div></div>
+    </div>
+    <div class="tiles">
+      <div class="tile t-bad"><div class="lbl" id="c1-label">Rice inflation, Philippines</div><div class="num bad"><span id="c1" data-source="kpi" data-field="rice_infl">—</span>%</div><div class="sub">% vs a year earlier</div></div>
+      <div class="tile t-rice"><div class="lbl" id="c2-label">Rice price, Philippines</div><div class="num">₱<span id="c2" data-source="kpi" data-field="rice_price">—</span></div><div class="sub">per kg, latest month</div></div>
+      <div class="tile t-muted"><div class="lbl" id="c3-label">Headline inflation, Philippines</div><div class="num"><span id="c3" data-source="kpi" data-field="infl">—</span>%</div><div class="sub">all items</div></div>
+    </div>
+    <p class="hint" id="sel-hint"></p>
+    <div class="grid">
+      <div class="card"><h3>Rice inflation by region, latest month</h3><p class="note">% vs a year earlier · red: above national · dashed: national · PSA</p><div class="chart" id="region-chart" data-source="regions"></div></div>
+      <div class="card"><h3>Regional detail</h3><p class="note">Latest month · click a header to sort, a row to select</p>
+        <div class="tablewrap">
+        <table id="region-table" data-source="regions" data-row-key="region_key">
+          <thead><tr>
+            <th data-field="region">Region</th>
+            <th class="n" data-field="rice_price_php_kg">Rice ₱/kg</th>
+            <th class="n" data-field="rice_price_change_pct">Price change %</th>
+            <th class="n" data-field="rice_inflation_pct">Rice infl. %</th>
+            <th class="n hide-sm" data-field="food_inflation_pct">Food infl. %</th>
+            <th class="n hide-sm" data-field="headline_inflation_pct">All items %</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="process" role="tabpanel" hidden>
+    <h2>Stages of the process</h2>
+    <p class="story">This dashboard and the Power BI report come from the same pipeline. Each stage has its own file in the project.</p>
+    <div class="stages">
+      <div class="stage"><div class="no">1</div><h4>Extract</h4><div class="tool">Python · pandas</div><p>Pulls PSA OpenSTAT and ECB data through their APIs, adds SWS, wage-order and policy figures with source links, and saves one raw Excel workbook.</p></div>
+      <div class="stage"><div class="no">2</div><h4>Clean</h4><div class="tool">Power Query (M)</div><p>Unpivots month columns, turns PSA's “.” placeholders into nulls, parses dates, sets types, and joins PSA's two region-naming styles.</p></div>
+      <div class="stage"><div class="no">3</div><h4>Model</h4><div class="tool">Star schema</div><p>Fact tables for prices, inflation, FX, GDP and hunger, linked to a Calendar and a Region dimension.</p></div>
+      <div class="stage"><div class="no">4</div><h4>Calculate</h4><div class="tool">DAX</div><p>Measures for latest vs year-ago, peso weakening, months above target, kg of rice per wage, regional gaps.</p></div>
+      <div class="stage"><div class="no">5</div><h4>Visualize</h4><div class="tool">Power BI report</div><p>Story pages with slicers, cross-highlighting and drill-through, mirrored in this web dashboard.</p></div>
+      <div class="stage"><div class="no">6</div><h4>Validate &amp; share</h4><div class="tool">Python checks</div><p>Checks that every DAX column and measure exists, compares cards with expected values, then shares the .pbix.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+dash.calc('kpi', {
+  inputs: ['nat', 'gdp', 'hunger'],
+  title: 'Headline figures',
+  description: 'Latest month vs a year earlier for inflation, rice, USD/PHP; latest GDP quarter vs a year earlier; latest and lowest SWS hunger; kg of rice per NCR wage.',
+  fn: (nat, gdp, hunger) => {
+    const n = [...nat].sort((a, b) => a.month < b.month ? -1 : 1), l = n[n.length - 1];
+    const ya = n.find(r => r.month === (Number(l.month.slice(0, 4)) - 1) + l.month.slice(4)) || n[0];
+    const g = [...gdp].sort((a, b) => a.quarter_start < b.quarter_start ? -1 : 1), gl = g[g.length - 1];
+    const gya = g.find(r => r.quarter === (Number(gl.quarter.slice(0, 4)) - 1) + gl.quarter.slice(4)) || g[0];
+    const h = [...hunger].sort((a, b) => a.month < b.month ? -1 : 1), hl = h[h.length - 1];
+    const pct = (a, b) => Math.round((b / a - 1) * 1000) / 10;
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return [{
+      latest_label: months[Number(l.month.slice(5, 7)) - 1] + ' ' + l.month.slice(0, 4),
+      infl: +l.headline_inflation_pct, infl_ya: +ya.headline_inflation_pct,
+      rice_infl: +l.rice_inflation_pct, rice_infl_ya: +ya.rice_inflation_pct,
+      rice_price: +l.rice_price_php_kg, rice_change_pct: pct(+ya.rice_price_php_kg, +l.rice_price_php_kg),
+      rice_low: Math.min(...n.map(r => +r.rice_price_php_kg)),
+      usd: +l.usd_php, peso_weaker_pct: pct(+ya.usd_php, +l.usd_php), power: +l.peso_power,
+      kg: +l.kg_rice_per_ncr_wage, kg_peak: Math.max(...n.map(r => +r.kg_rice_per_ncr_wage)),
+      gdp: +gl.gdp_growth_pct, gdp_ya: +gya.gdp_growth_pct, gdp_q: gl.quarter,
+      hunger: +hl.hunger_pct, hunger_survey: hl.survey, hunger_low: Math.min(...h.map(r => +r.hunger_pct))
+    }];
+  }
+});
+
+dash.calc('above', {
+  inputs: ['regions', 'nat'],
+  title: 'Regions above national rice inflation',
+  description: 'Count of regions whose latest rice inflation exceeds the national figure for the same month.',
+  fn: (regions, nat) => {
+    const national = +[...nat].sort((a, b) => a.month < b.month ? -1 : 1).pop().rice_inflation_pct;
+    return [{ n: regions.filter(r => +r.rice_inflation_pct > national).length, total: regions.length }];
+  }
+});
+</script>
+
+<script>
+(() => {
+  const byMonth = (a, b) => a.month < b.month ? -1 : 1;
+  const fmtMonth = d3.utcFormat('%b %Y');
+  const parse = s => new Date(String(s).slice(0, 10) + 'T00:00:00Z');
+  const f1 = d3.format('.1f'), f2 = d3.format('.2f');
+  // interaction state (like Power BI slicers and selections)
+  const st = { page: 'economy', from: null, to: null, island: 'All', region: null, survey: null, sortKey: 'rice_inflation_pct', sortDir: -1 };
+  let draw = () => {};
+
+  const measure = (svg, texts) => {
+    const g = svg.append('g').style('font-size', 'var(--ui-font-size-caption)');
+    const w = d3.max(texts, t => g.append('text').text(t).node().getComputedTextLength()) || 0;
+    g.remove();
+    return w;
+  };
+  const placeholder = (el, status) => {
+    el.innerHTML = '';
+    el.classList.toggle('dash-skeleton', status === 'loading');
+    if (['error', 'connect', 'declined', 'missing'].includes(status)) {
+      const d = document.createElement('div'); d.className = 'fail'; d.textContent = 'Failed to load'; el.appendChild(d);
+    }
+  };
+  const emptyMsg = (el, text) => { el.innerHTML = ''; el.classList.remove('dash-skeleton'); const d = document.createElement('div'); d.className = 'empty'; d.textContent = text; el.appendChild(d); };
+  const makeTip = el => { const t = document.createElement('div'); t.className = 'tip'; el.appendChild(t); return t; };
+  const showTip = (tip, el, x, y, lines) => {
+    tip.replaceChildren();
+    lines.forEach((l, i) => {
+      const row = document.createElement('div');
+      if (i === 0) row.className = 'd';
+      if (l.color) { const s = document.createElement('span'); s.className = 'sw'; s.style.background = l.color; row.appendChild(s); }
+      row.appendChild(document.createTextNode(l.text));
+      tip.appendChild(row);
+    });
+    tip.style.display = 'block';
+    tip.style.left = Math.max(0, Math.min(el.clientWidth - tip.offsetWidth, x + 12)) + 'px';
+    tip.style.top = Math.max(0, y - 10) + 'px';
+  };
+  const muted = sel => sel.attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--ui-font-size-caption)');
+  const newSvg = (el, W, H) => d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).style('overflow', 'visible');
+  const yGrid = (svg, y, m, W, fmt) => {
+    svg.append('g').selectAll('line').data(y.ticks(4)).join('line')
+      .attr('x1', m.l).attr('x2', W - m.r).attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', 'var(--ui-chart-grid)');
+    svg.append('g').selectAll('text').data(y.ticks(4)).join('text')
+      .attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em').attr('text-anchor', 'end').call(muted).text(fmt);
+  };
+
+  // Lines over months. series: [{key, name, color, fmt}]; refs: [{date, n}]; band: {lo, hi}
+  const lineChart = (el, rows, series, yFmt, refs, band) => {
+    if (rows.length < 2) return emptyMsg(el, 'Widen the date range to see this chart');
+    el.innerHTML = ''; el.classList.remove('dash-skeleton');
+    const W = el.clientWidth || 320, H = 240;
+    const data = rows.map(r => ({ date: parse(r.month), ...Object.fromEntries(series.map(s => [s.key, +r[s.key]])) }));
+    const svg = newSvg(el, W, H);
+    const ys = d3.extent(data.flatMap(d => series.map(s => d[s.key])).concat(band ? [band.lo, band.hi] : []));
+    const pad = (ys[1] - ys[0]) * 0.1 || 1;
+    const y0 = d3.scaleLinear([ys[0] - pad, ys[1] + pad], [0, 1]).nice();
+    const last = data[data.length - 1];
+    const ends = series.map(s => `${s.name} ${s.fmt(last[s.key])}`);
+    const m = { t: refs ? 16 : 8, r: series.length > 1 ? measure(svg, ends) + 10 : 8, b: 24, l: measure(svg, y0.ticks(4).map(yFmt)) + 10 };
+    const x = d3.scaleUtc(d3.extent(data, d => d.date), [m.l, W - m.r]);
+    const y = d3.scaleLinear(y0.domain(), [H - m.b, m.t]);
+    if (band) svg.append('rect').attr('x', m.l).attr('width', W - m.l - m.r).attr('y', y(band.hi)).attr('height', y(band.lo) - y(band.hi))
+      .attr('fill', 'var(--color-ok)').attr('opacity', .08);
+    yGrid(svg, y, m, W, yFmt);
+    svg.append('g').attr('transform', `translate(0,${H - m.b})`)
+      .call(d3.axisBottom(x).ticks(Math.max(2, Math.min(6, Math.floor((W - m.l - m.r) / 80)))).tickFormat(d3.utcFormat('%b %y')).tickSizeOuter(0))
+      .attr('font-size', null).attr('font-family', null)
+      .call(g => { g.select('.domain').attr('stroke', 'var(--ui-chart-axis)'); g.selectAll('.tick line').remove(); g.selectAll('text').call(muted); });
+    (refs || []).forEach(r => {
+      const rx = x(parse(r.date));
+      if (rx < m.l || rx > W - m.r) return;
+      svg.append('line').attr('x1', rx).attr('x2', rx).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--ui-chart-reference)').attr('stroke-dasharray', '4 3');
+      svg.append('circle').attr('cx', rx).attr('cy', m.t - 6).attr('r', 7).attr('fill', 'var(--ui-chart-grid)');
+      svg.append('text').attr('x', rx).attr('y', m.t - 6).attr('dy', '0.35em').attr('text-anchor', 'middle').attr('fill', 'var(--color-fg)').style('font-size', '10px').text(r.n);
+    });
+    series.forEach(s => svg.append('path').datum(data).attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', 2)
+      .attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('d', d3.line().x(d => x(d.date)).y(d => y(d[s.key]))));
+    if (series.length > 1) {
+      const pos = series.map(s => ({ s, y: y(last[s.key]) })).sort((a, b) => a.y - b.y);
+      for (let i = 1; i < pos.length; i++) if (pos[i].y - pos[i - 1].y < 14) pos[i].y = pos[i - 1].y + 14;
+      pos.forEach(p => svg.append('text').attr('x', W - m.r + 6).attr('y', p.y).attr('dy', '0.32em')
+        .attr('fill', p.s.color).style('font-size', 'var(--ui-font-size-caption)').text(`${p.s.name} ${p.s.fmt(last[p.s.key])}`));
+    }
+    const tip = makeTip(el);
+    const rule = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--ui-chart-axis)').style('display', 'none');
+    const dots = series.map(s => svg.append('circle').attr('r', 4).attr('fill', s.color).style('display', 'none'));
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('mousemove', ev => {
+        const [px] = d3.pointer(ev);
+        const d = d3.least(data, d => Math.abs(x(d.date) - px));
+        rule.style('display', null).attr('x1', x(d.date)).attr('x2', x(d.date));
+        series.forEach((s, i) => dots[i].style('display', null).attr('cx', x(d.date)).attr('cy', y(d[s.key])));
+        const k = W / el.clientWidth;
+        showTip(tip, el, x(d.date) / k, y(d[series[0].key]) / k,
+          [{ text: fmtMonth(d.date) }, ...series.map(s => ({ text: `${s.name}: ${s.fmt(d[s.key])}`, color: series.length > 1 ? s.color : null }))]);
+      })
+      .on('mouseleave', () => { tip.style.display = 'none'; rule.style('display', 'none'); dots.forEach(c => c.style('display', 'none')); });
+  };
+
+  // Vertical bars; `hot` decides which bars take the accent colour; onClick makes bars selectable.
+  const bars = (el, rows, labelKey, valueKey, fmt, tipLabel, hot, onClick) => {
+    if (!rows.length) return emptyMsg(el, 'No data in the selected date range');
+    el.innerHTML = ''; el.classList.remove('dash-skeleton');
+    const W = el.clientWidth || 320, H = 240;
+    const data = rows.map(r => ({ label: r[labelKey], v: +r[valueKey] }));
+    const svg = newSvg(el, W, H);
+    const y0 = d3.scaleLinear([Math.min(0, d3.min(data, d => d.v)), d3.max(data, d => d.v)], [0, 1]).nice();
+    const m = { t: 16, r: 8, b: 24, l: measure(svg, y0.ticks(4).map(fmt)) + 10 };
+    const x = d3.scaleBand(data.map(d => d.label), [m.l, W - m.r]).padding(0.3);
+    const y = d3.scaleLinear(y0.domain(), [H - m.b, m.t]);
+    yGrid(svg, y, m, W, fmt);
+    const bw = Math.min(40, x.bandwidth());
+    const tip = makeTip(el);
+    svg.append('g').selectAll('rect').data(data).join('rect').attr('class', onClick ? 'vbar' : null)
+      .attr('x', d => x(d.label) + (x.bandwidth() - bw) / 2).attr('width', bw)
+      .attr('y', d => y(Math.max(0, d.v))).attr('height', d => Math.abs(y(d.v) - y(0))).attr('rx', 4)
+      .attr('fill', (d, i) => hot(d, i, data) ? dash.colors[0] : 'var(--ui-chart-muted)')
+      .on('mousemove', (ev, d) => { const k = W / el.clientWidth; showTip(tip, el, (x(d.label) + bw) / k, y(d.v) / k, [{ text: d.label }, { text: `${tipLabel}: ${fmt(d.v)}` }]); })
+      .on('mouseleave', () => { tip.style.display = 'none'; })
+      .on('click', (ev, d) => onClick && onClick(d.label));
+    if (bw >= 18) svg.append('g').selectAll('text').data(data).join('text')
+      .attr('x', d => x(d.label) + x.bandwidth() / 2).attr('y', d => y(Math.max(0, d.v)) - 4).attr('text-anchor', 'middle')
+      .attr('fill', 'var(--color-fg)').style('font-size', 'var(--ui-font-size-caption)').text(d => f1(d.v));
+    const every = Math.ceil(data.length / Math.max(1, Math.floor((W - m.l - m.r) / 56)));
+    svg.append('g').selectAll('text').data(data.filter((d, i) => (data.length - 1 - i) % every === 0)).join('text')
+      .attr('x', d => x(d.label) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').call(muted).text(d => d.label);
+    svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--ui-chart-axis)');
+  };
+
+  // Horizontal bars of rice inflation by region; dashed line = national.
+  const regionBars = (el, rows, national) => {
+    el.innerHTML = ''; el.classList.remove('dash-skeleton');
+    const W = el.clientWidth || 320;
+    const data = rows.map(r => ({ key: r.region_key, label: r.region, v: +r.rice_inflation_pct })).sort((a, b) => b.v - a.v);
+    const H = Math.max(120, data.length * 24 + 30);
+    const svg = newSvg(el, W, H);
+    const fmt = v => f1(v) + '%';
+    const m = { t: 8, r: measure(svg, data.map(d => fmt(d.v))) + 10, b: 22, l: measure(svg, data.map(d => d.label)) + 10 };
+    const x = d3.scaleLinear([0, Math.max(national, d3.max(data, d => d.v) || 1)], [m.l, W - m.r]).nice();
+    const y = d3.scaleBand(data.map(d => d.key), [m.t, H - m.b]).padding(0.25);
+    svg.append('g').selectAll('line').data(x.ticks(4)).join('line')
+      .attr('x1', d => x(d)).attr('x2', d => x(d)).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--ui-chart-grid)');
+    svg.append('g').selectAll('text').data(x.ticks(4)).join('text').attr('x', d => x(d)).attr('y', H - 6).attr('text-anchor', 'middle').call(muted).text(d => d + '%');
+    const tip = makeTip(el);
+    const g = svg.append('g').selectAll('g').data(data).join('g').attr('class', 'hbar')
+      .style('opacity', d => !st.region || d.key === st.region ? 1 : .35)
+      .on('click', (ev, d) => selectRegion(d.key))
+      .on('mousemove', (ev, d) => { const k = W / el.clientWidth; showTip(tip, el, x(d.v) / k, y(d.key) / k,
+        [{ text: d.label }, { text: `Rice inflation: ${fmt(d.v)}` }, { text: `National: ${fmt(national)}` }]); })
+      .on('mouseleave', () => { tip.style.display = 'none'; });
+    g.append('rect').attr('x', m.l).attr('y', d => y(d.key)).attr('height', y.bandwidth())
+      .attr('width', d => Math.max(0, x(d.v) - m.l)).attr('rx', 4)
+      .attr('fill', d => d.v > national ? 'var(--ui-chart-status-critical)' : 'var(--ui-chart-muted)');
+    g.append('text').attr('x', m.l - 6).attr('y', d => y(d.key) + y.bandwidth() / 2).attr('dy', '0.32em').attr('text-anchor', 'end')
+      .attr('fill', 'var(--color-fg)').style('font-size', 'var(--ui-font-size-caption)').style('font-weight', d => d.key === st.region ? 600 : null).text(d => d.label);
+    g.append('text').attr('x', d => x(d.v) + 4).attr('y', d => y(d.key) + y.bandwidth() / 2).attr('dy', '0.32em').call(muted).text(d => fmt(d.v));
+    if (national > 0) svg.append('line').attr('x1', x(national)).attr('x2', x(national)).attr('y1', m.t).attr('y2', H - m.b)
+      .attr('stroke', 'var(--color-fg)').attr('stroke-dasharray', '4 3');
+  };
+
+  const regionTable = rows => {
+    const tb = document.querySelector('#region-table tbody');
+    tb.replaceChildren();
+    tb.classList.toggle('has-sel', !!st.region);
+    document.querySelectorAll('#region-table th[data-field]').forEach(th => {
+      if (th.dataset.field === st.sortKey) th.setAttribute('aria-sort', st.sortDir < 0 ? 'descending' : 'ascending');
+      else th.removeAttribute('aria-sort');
+    });
+    const sorted = [...rows].sort((a, b) => {
+      const va = st.sortKey === 'region' ? a.region : +a[st.sortKey], vb = st.sortKey === 'region' ? b.region : +b[st.sortKey];
+      return (typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb))) * st.sortDir;
+    });
+    sorted.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = r.region_key;
+      if (r.region_key === st.region) tr.className = 'sel';
+      tr.addEventListener('click', () => selectRegion(r.region_key));
+      const td = (txt, cls) => { const c = document.createElement('td'); if (cls) c.className = cls; c.textContent = txt; tr.appendChild(c); };
+      td(r.region); td(f2(+r.rice_price_php_kg), 'n');
+      td((+r.rice_price_change_pct > 0 ? '+' : '') + f1(+r.rice_price_change_pct), 'n');
+      td(f1(+r.rice_inflation_pct), 'n'); td(f1(+r.food_inflation_pct), 'n hide-sm'); td(f1(+r.headline_inflation_pct), 'n hide-sm');
+      tb.appendChild(tr);
+    });
+  };
+
+  const selectRegion = k => { st.region = st.region === k ? null : k; draw(); };
+
+  // ---- controls ----
+  const tabs = document.querySelectorAll('#tabs button');
+  const showPage = (id, link) => {
+    st.page = id;
+    tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.page === id)));
+    document.querySelectorAll('.fa .page').forEach(p => { p.hidden = p.id !== id; });
+    document.getElementById('time-slicers').hidden = id === 'regions' || id === 'process';
+    if (link) dash.setLink(id);
+    draw();
+  };
+  tabs.forEach(b => b.addEventListener('click', () => showPage(b.dataset.page, true)));
+
+  const fromSel = document.getElementById('from-month'), toSel = document.getElementById('to-month');
+  fromSel.addEventListener('change', () => { st.from = fromSel.value; if (st.to < st.from) st.to = st.from; draw(); });
+  toSel.addEventListener('change', () => { st.to = toSel.value; if (st.from > st.to) st.from = st.to; draw(); });
+  const quick = [['All', null], ['Last 12 months', 12], ['2026 only', 'year']];
+  const qbox = document.getElementById('quick-range');
+  quick.forEach(([label, v]) => {
+    const b = document.createElement('button'); b.textContent = label; b.dataset.q = label;
+    b.addEventListener('click', () => {
+      const months = [...fromSel.options].map(o => o.value);
+      const last = months[months.length - 1];
+      st.to = last;
+      st.from = v === null ? months[0] : v === 'year' ? (months.find(m => m.startsWith(last.slice(0, 4))) || months[0]) : months[Math.max(0, months.length - v)];
+      draw();
+    });
+    qbox.appendChild(b);
+  });
+  document.getElementById('reset').addEventListener('click', () => {
+    st.from = st.to = null; st.island = 'All'; st.region = null; st.survey = null; draw();
+  });
+
+  const fbox = document.getElementById('island-filter');
+  ['All', 'Luzon', 'Visayas', 'Mindanao'].forEach(name => {
+    const b = document.createElement('button'); b.textContent = name; b.dataset.name = name;
+    b.addEventListener('click', () => { st.island = name; st.region = null; draw(); });
+    fbox.appendChild(b);
+  });
+  document.querySelectorAll('#region-table th[data-field]').forEach(th => {
+    const b = document.createElement('button'); b.textContent = th.textContent; th.replaceChildren(b);
+    b.addEventListener('click', () => {
+      const f = th.dataset.field;
+      st.sortDir = st.sortKey === f ? -st.sortDir : (f === 'region' ? 1 : -1);
+      st.sortKey = f; draw();
+    });
+  });
+
+  const digits = { rice_price: '.2f', rice_low: '.2f', usd: '.2f', power: '.2f', n: '.0f', total: '.0f' };
+  const fill = src => {
+    const d = dash.data(src);
+    const row = d.status === 'ok' ? (d.data[0] || {}) : null;
+    document.querySelectorAll(`.fa [data-source="${src}"][data-field]`).forEach(el => {
+      if (el.tagName === 'TH' || el.dataset.dyn) return;
+      el.classList.toggle('dash-skeleton', d.status === 'loading');
+      const v = row ? row[el.dataset.field] : null;
+      el.textContent = v == null ? '—' : typeof v === 'number' ? d3.format(digits[el.dataset.field] || '.1f')(v) : v;
+    });
+  };
+
+  // Page-4 cards follow the selected region (cross-filter); with none selected they show the Philippines.
+  const crossFilterCards = (regions, kpi) => {
+    const r = st.region && regions.find(x => x.region_key === st.region);
+    const name = r ? r.region : 'Philippines';
+    [['c1', 'rice_inflation_pct', 'rice_infl', 'Rice inflation', '.1f'], ['c2', 'rice_price_php_kg', 'rice_price', 'Rice price', '.2f'],
+     ['c3', 'headline_inflation_pct', 'infl', 'Headline inflation', '.1f']].forEach(([id, rf, kf, label, fmt]) => {
+      const el = document.getElementById(id);
+      document.getElementById(id + '-label').textContent = `${label}, ${name}`;
+      if (r) {
+        el.dataset.dyn = '1'; el.dataset.source = 'regions'; el.dataset.field = rf; el.dataset.where = 'region_key=' + encodeURIComponent(r.region_key);
+        el.textContent = d3.format(fmt)(+r[rf]);
+      } else {
+        delete el.dataset.dyn; delete el.dataset.where; el.dataset.source = 'kpi'; el.dataset.field = kf;
+        el.textContent = kpi && kpi[kf] != null ? d3.format(fmt)(kpi[kf]) : '—';
+      }
+    });
+  };
+
+  draw = () => {
+    fill('kpi'); fill('above');
+    const n = dash.data('nat'), g = dash.data('gdp'), h = dash.data('hunger'), ev = dash.data('events'), rg = dash.data('regions'), k = dash.data('kpi');
+    const kpi = k.status === 'ok' ? k.data[0] : null;
+
+    // date slicer options come from the data's months
+    if (n.status === 'ok' && n.data.length) {
+      const months = n.data.map(r => r.month).sort();
+      if (fromSel.options.length !== months.length) {
+        [fromSel, toSel].forEach(sel => { sel.replaceChildren(...months.map(m => { const o = document.createElement('option'); o.value = m; o.textContent = fmtMonth(parse(m)); return o; })); });
+      }
+      if (!st.from) st.from = months[0];
+      if (!st.to) st.to = months[months.length - 1];
+      fromSel.value = st.from; toSel.value = st.to;
+    }
+    const inRange = m => (!st.from || m >= st.from) && (!st.to || m <= st.to);
+    qbox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+
+    if (st.page === 'economy') {
+      const elG = document.getElementById('gdp-chart');
+      if (g.status === 'ok') bars(elG, [...g.data].sort((a, b) => a.quarter_start < b.quarter_start ? -1 : 1).filter(r => (!st.to || r.quarter_start <= st.to) && (!st.from || d3.utcMonth.offset(parse(r.quarter_start), 3) > parse(st.from))),
+        'quarter', 'gdp_growth_pct', v => d3.format('.0f')(v) + '%', 'GDP growth', (d, i, all) => i === all.length - 1);
+      else placeholder(elG, g.status);
+    }
+    const rows = n.status === 'ok' ? [...n.data].sort(byMonth).filter(r => inRange(r.month)) : [];
+    if (st.page === 'economy') {
+      const fx = document.getElementById('fx-chart'), inf = document.getElementById('infl-chart');
+      if (n.status === 'ok') {
+        lineChart(fx, rows, [{ key: 'usd_php', name: 'USD/PHP', color: '#2563EB', fmt: v => '₱' + f2(v) }], d3.format('.0f'));
+        lineChart(inf, rows, [
+          { key: 'food_inflation_pct', name: 'Food', color: dash.colors[0], fmt: v => f1(v) + '%' },
+          { key: 'headline_inflation_pct', name: 'All items', color: 'var(--ui-chart-muted)', fmt: v => f1(v) + '%' }
+        ], v => d3.format('.0f')(v) + '%', null, { lo: 2, hi: 4 });
+      } else { placeholder(fx, n.status); placeholder(inf, n.status); }
+    }
+    if (st.page === 'rice') {
+      const rc = document.getElementById('rice-chart'), kc = document.getElementById('kg-chart'), list = document.getElementById('events-list');
+      list.replaceChildren();
+      if (n.status === 'ok') {
+        const events = ev.status === 'ok' ? [...ev.data].sort((a, b) => a.date < b.date ? -1 : 1).map((e, i) => ({ date: e.date, n: i + 1, event: e.event })) : [];
+        lineChart(rc, rows, [{ key: 'rice_price_php_kg', name: 'Rice', color: dash.colors[0], fmt: v => '₱' + f2(v) }], v => '₱' + d3.format('.0f')(v), events);
+        lineChart(kc, rows, [{ key: 'kg_rice_per_ncr_wage', name: 'Kg per wage', color: dash.colors[0], fmt: v => f1(v) + ' kg' }], d3.format('.0f'));
+        events.forEach(e => {
+          const li = document.createElement('li'), s = document.createElement('span');
+          s.className = 'n'; s.textContent = e.n; li.appendChild(s);
+          li.appendChild(document.createTextNode(`${fmtMonth(parse(e.date))} — ${e.event}`));
+          list.appendChild(li);
+        });
+      } else { placeholder(rc, n.status); placeholder(kc, n.status); }
+    }
+    if (st.page === 'hunger') {
+      const hc = document.getElementById('hunger-chart'), hint = document.getElementById('hunger-hint');
+      hint.replaceChildren();
+      if (h.status === 'ok') {
+        const hr = [...h.data].sort(byMonth).filter(r => inRange(r.month));
+        const latest = [...h.data].sort(byMonth).pop();
+        bars(hc, hr, 'survey', 'hunger_pct', v => d3.format('.0f')(v) + '%', 'Families hungry',
+          (d, i, all) => st.survey ? d.label === st.survey : i === all.length - 1, label => { st.survey = st.survey === label ? null : label; draw(); });
+        const s = st.survey && h.data.find(r => r.survey === st.survey);
+        if (s) {
+          const gap = +latest.hunger_pct - +s.hunger_pct;
+          hint.textContent = `${s.survey}: ${f1(+s.hunger_pct)}% of families. The latest survey (${latest.survey}) is ${f1(Math.abs(gap))} pts ${gap >= 0 ? 'higher' : 'lower'}.`;
+          const b = document.createElement('button'); b.textContent = 'Clear'; b.addEventListener('click', () => { st.survey = null; draw(); }); hint.appendChild(b);
+        }
+      } else placeholder(hc, h.status);
+    }
+
+    // page 4: island slicer, cross-filter, chart, table
+    fbox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.name === st.island)));
+    if (rg.status === 'ok') {
+      const regionRows = rg.data.filter(r => st.island === 'All' || r.island_group === st.island);
+      if (st.region && !regionRows.find(r => r.region_key === st.region)) st.region = null;
+      crossFilterCards(rg.data, kpi);
+      const hint = document.getElementById('sel-hint'); hint.replaceChildren();
+      const sr = regionRows.find(r => r.region_key === st.region);
+      if (sr && kpi) {
+        const gap = +sr.rice_inflation_pct - kpi.rice_infl;
+        hint.textContent = `${sr.region} selected: rice inflation ${gap > 0 ? '+' : ''}${f1(gap)} pts vs national, rice price up ${f1(+sr.rice_price_change_pct)}% in a year.`;
+        const b = document.createElement('button'); b.textContent = 'Clear selection'; b.addEventListener('click', () => selectRegion(st.region)); hint.appendChild(b);
+      }
+      if (st.page === 'regions') regionBars(document.getElementById('region-chart'), regionRows, kpi ? kpi.rice_infl : 0);
+      regionTable(regionRows);
+    } else if (st.page === 'regions') { placeholder(document.getElementById('region-chart'), rg.status); document.querySelector('#region-table tbody').replaceChildren(); }
+  };
+
+  dash.onData(draw);
+  // open the page a link names, else the first
+  const named = location.hash.slice(1);
+  showPage([...tabs].some(b => b.dataset.page === named) ? named : 'economy', false);
+})();
+</script>

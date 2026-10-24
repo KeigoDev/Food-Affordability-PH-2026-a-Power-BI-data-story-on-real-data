@@ -1,0 +1,315 @@
+{
+  "config": "{\"version\": \"5.43\", \"themeCollection\": {}, \"activeSectionIndex\": 0, \"defaultDrillFilterOtherVisuals\": true, \"settings\": {\"useStylableVisualContainerHeader\": true}}",
+  "layoutOptimization": 0,
+  "sections": [
+    {
+      "name": "ReportSection0",
+      "displayName": "1 · Bigger picture",
+      "displayOption": 1,
+      "width": 1280,
+      "height": 720,
+      "config": "{}",
+      "filters": "[]",
+      "ordinal": 0,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 10,
+          "z": 0,
+          "width": 1240,
+          "height": 60,
+          "config": "{\"name\": \"8666fdea48475509a7bc\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 1240, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Growth is slowing, the dollar is strong, and inflation is back\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"61a9ecefa15b52bea5ae\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.GDP Growth (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"GDP Growth (Latest)\"}, \"Name\": \"_Measures.GDP Growth (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'GDP growth, latest quarter (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 270,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"7f5e01ea87495dcc91a0\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 270, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.USD PHP (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"USD PHP (Latest)\"}, \"Name\": \"_Measures.USD PHP (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Pesos per US dollar'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 520,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"a70d757c607054a2b6f2\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 520, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Peso Weakening YoY %\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Peso Weakening YoY %\"}, \"Name\": \"_Measures.Peso Weakening YoY %\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Peso weaker vs a year ago'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 770,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"a6789b8d07355f09bf54\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 770, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Headline Inflation (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Headline Inflation (Latest)\"}, \"Name\": \"_Measures.Headline Inflation (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Headline inflation (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 1020,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"0074c8bb553c5c168a58\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 1020, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Peso Purchasing Power (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Peso Purchasing Power (Latest)\"}, \"Name\": \"_Measures.Peso Purchasing Power (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Purchasing power of \\u20b11 (2018 = 1)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 210,
+          "z": 0,
+          "width": 400,
+          "height": 490,
+          "config": "{\"name\": \"9b24dc21c2b35684bc28\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 210, \"z\": 0, \"width\": 400, \"height\": 490}}], \"singleVisual\": {\"visualType\": \"clusteredColumnChart\", \"projections\": {\"Category\": [{\"queryRef\": \"GDP.quarter\", \"active\": true}], \"Y\": [{\"queryRef\": \"_Measures.GDP Growth\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"GDP\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"quarter\"}, \"Name\": \"GDP.quarter\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"GDP Growth\"}, \"Name\": \"_Measures.GDP Growth\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'GDP growth by quarter (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 440,
+          "y": 210,
+          "z": 0,
+          "width": 400,
+          "height": 490,
+          "config": "{\"name\": \"83b64dd50cc959948a4f\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 440, \"y\": 210, \"z\": 0, \"width\": 400, \"height\": 490}}], \"singleVisual\": {\"visualType\": \"lineChart\", \"projections\": {\"Category\": [{\"queryRef\": \"Calendar.Month Start\", \"active\": true}], \"Y\": [{\"queryRef\": \"_Measures.USD PHP\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendar\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Month Start\"}, \"Name\": \"Calendar.Month Start\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"USD PHP\"}, \"Name\": \"_Measures.USD PHP\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Pesos per US dollar (monthly average)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 860,
+          "y": 210,
+          "z": 0,
+          "width": 400,
+          "height": 490,
+          "config": "{\"name\": \"82bef1e286f05f0785f1\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 860, \"y\": 210, \"z\": 0, \"width\": 400, \"height\": 490}}], \"singleVisual\": {\"visualType\": \"lineChart\", \"projections\": {\"Category\": [{\"queryRef\": \"Calendar.Month Start\", \"active\": true}], \"Y\": [{\"queryRef\": \"_Measures.Headline Inflation\"}, {\"queryRef\": \"_Measures.Food Inflation\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendar\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Month Start\"}, \"Name\": \"Calendar.Month Start\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Headline Inflation\"}, \"Name\": \"_Measures.Headline Inflation\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Food Inflation\"}, \"Name\": \"_Measures.Food Inflation\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Inflation: headline vs food (%), BSP target 2\\u20134%'\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection1",
+      "displayName": "2 · The rice shock",
+      "displayOption": 1,
+      "width": 1280,
+      "height": 720,
+      "config": "{}",
+      "filters": "[]",
+      "ordinal": 1,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 10,
+          "z": 0,
+          "width": 1240,
+          "height": 60,
+          "config": "{\"name\": \"bb9a9e81a6dc5639ad9d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 1240, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Import policy swung rice prices down, then sharply up\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"cbc19f255bd25bb89aef\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Rice Price (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Rice Price (Latest)\"}, \"Name\": \"_Measures.Rice Price (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Rice, regular-milled (\\u20b1/kg)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 270,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"6e644beeb7f755f18114\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 270, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Rice Price Change YoY %\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Rice Price Change YoY %\"}, \"Name\": \"_Measures.Rice Price Change YoY %\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Rice price vs a year ago'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 520,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"5fa9ad36b25a54e0b252\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 520, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Rice Inflation (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Rice Inflation (Latest)\"}, \"Name\": \"_Measures.Rice Inflation (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Rice inflation (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 770,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"dc341fd46fa25b4c96a0\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 770, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Kg Rice per NCR Wage (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Kg Rice per NCR Wage (Latest)\"}, \"Name\": \"_Measures.Kg Rice per NCR Wage (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Kg of rice per NCR wage day'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 1020,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"3bdf71e1b5f15ed18a9c\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 1020, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Kg Rice per NCR Wage (Peak)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Kg Rice per NCR Wage (Peak)\"}, \"Name\": \"_Measures.Kg Rice per NCR Wage (Peak)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Best point (kg)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 210,
+          "z": 0,
+          "width": 610,
+          "height": 330,
+          "config": "{\"name\": \"6e5f1a3703f55426b8e4\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 210, \"z\": 0, \"width\": 610, \"height\": 330}}], \"singleVisual\": {\"visualType\": \"lineChart\", \"projections\": {\"Category\": [{\"queryRef\": \"Calendar.Month Start\", \"active\": true}], \"Y\": [{\"queryRef\": \"_Measures.Rice Price\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendar\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Month Start\"}, \"Name\": \"Calendar.Month Start\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Rice Price\"}, \"Name\": \"_Measures.Rice Price\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Rice retail price, Philippines (\\u20b1/kg)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 650,
+          "y": 210,
+          "z": 0,
+          "width": 610,
+          "height": 330,
+          "config": "{\"name\": \"ff6e6099eef559439d4a\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 650, \"y\": 210, \"z\": 0, \"width\": 610, \"height\": 330}}], \"singleVisual\": {\"visualType\": \"lineChart\", \"projections\": {\"Category\": [{\"queryRef\": \"Calendar.Month Start\", \"active\": true}], \"Y\": [{\"queryRef\": \"_Measures.Kg Rice per NCR Wage\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendar\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Month Start\"}, \"Name\": \"Calendar.Month Start\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Kg Rice per NCR Wage\"}, \"Name\": \"_Measures.Kg Rice per NCR Wage\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Kg of rice one NCR minimum-wage day buys'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 555,
+          "z": 0,
+          "width": 1240,
+          "height": 150,
+          "config": "{\"name\": \"4352c0e7c98a5f2e825f\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 555, \"z\": 0, \"width\": 1240, \"height\": 150}}], \"singleVisual\": {\"visualType\": \"tableEx\", \"projections\": {\"Values\": [{\"queryRef\": \"Events.date\"}, {\"queryRef\": \"Events.event\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Events\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"date\"}, \"Name\": \"Events.date\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"event\"}, \"Name\": \"Events.event\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'What changed: rice import policy'\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection2",
+      "displayName": "3 · Hunger",
+      "displayOption": 1,
+      "width": 1280,
+      "height": 720,
+      "config": "{}",
+      "filters": "[]",
+      "ordinal": 2,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 10,
+          "z": 0,
+          "width": 1240,
+          "height": 60,
+          "config": "{\"name\": \"ad424cbc891a5244bd08\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 1240, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Hunger stays stubbornly high\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"890db199a13e5ad2af49\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Hunger Rate (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Hunger Rate (Latest)\"}, \"Name\": \"_Measures.Hunger Rate (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Families going hungry, latest SWS (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 270,
+          "y": 80,
+          "z": 0,
+          "width": 240,
+          "height": 110,
+          "config": "{\"name\": \"385614d83b7957839b18\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 270, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Hunger Rate (Low)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Hunger Rate (Low)\"}, \"Name\": \"_Measures.Hunger Rate (Low)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Lowest since Mar 2025 (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 210,
+          "z": 0,
+          "width": 1240,
+          "height": 490,
+          "config": "{\"name\": \"34f45fefed92563989b7\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 210, \"z\": 0, \"width\": 1240, \"height\": 490}}], \"singleVisual\": {\"visualType\": \"clusteredColumnChart\", \"projections\": {\"Category\": [{\"queryRef\": \"Hunger.month\", \"active\": true}], \"Y\": [{\"queryRef\": \"_Measures.Hunger Rate\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Hunger\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"month\"}, \"Name\": \"Hunger.month\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Hunger Rate\"}, \"Name\": \"_Measures.Hunger Rate\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Families experiencing involuntary hunger, per SWS survey (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ]
+    },
+    {
+      "name": "ReportSection3",
+      "displayName": "4 · Where it hurts most",
+      "displayOption": 1,
+      "width": 1280,
+      "height": 720,
+      "config": "{}",
+      "filters": "[]",
+      "ordinal": 3,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 10,
+          "z": 0,
+          "width": 1240,
+          "height": 60,
+          "config": "{\"name\": \"b85a0057ce9650d1b34d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 1240, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Rice inflation by region: where relief should go first\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 80,
+          "z": 0,
+          "width": 300,
+          "height": 110,
+          "config": "{\"name\": \"091c0c88a4ef5823a4b3\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 80, \"z\": 0, \"width\": 300, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Region.island_group\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Region\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"island_group\"}, \"Name\": \"Region.island_group\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Island group'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 340,
+          "y": 80,
+          "z": 0,
+          "width": 300,
+          "height": 110,
+          "config": "{\"name\": \"924f52a7101a592da55b\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 340, \"y\": 80, \"z\": 0, \"width\": 300, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Rice Inflation (National Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Rice Inflation (National Latest)\"}, \"Name\": \"_Measures.Rice Inflation (National Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'National rice inflation (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 650,
+          "y": 80,
+          "z": 0,
+          "width": 300,
+          "height": 110,
+          "config": "{\"name\": \"c0273ad22c08554d80f2\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 650, \"y\": 80, \"z\": 0, \"width\": 300, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Headline Inflation (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Headline Inflation (Latest)\"}, \"Name\": \"_Measures.Headline Inflation (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Headline inflation (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 960,
+          "y": 80,
+          "z": 0,
+          "width": 300,
+          "height": 110,
+          "config": "{\"name\": \"dcd192f4163554efa97b\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 960, \"y\": 80, \"z\": 0, \"width\": 300, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Rice Price (Latest)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Rice Price (Latest)\"}, \"Name\": \"_Measures.Rice Price (Latest)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Rice price (\\u20b1/kg)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 210,
+          "z": 0,
+          "width": 520,
+          "height": 490,
+          "config": "{\"name\": \"523533debd10533aa993\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 210, \"z\": 0, \"width\": 520, \"height\": 490}}], \"singleVisual\": {\"visualType\": \"clusteredBarChart\", \"projections\": {\"Category\": [{\"queryRef\": \"Region.region\", \"active\": true}], \"Y\": [{\"queryRef\": \"_Measures.Regional Rice Inflation\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Region\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"region\"}, \"Name\": \"Region.region\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Regional Rice Inflation\"}, \"Name\": \"_Measures.Regional Rice Inflation\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Rice inflation by region, latest month (%)'\"}}}}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 560,
+          "y": 210,
+          "z": 0,
+          "width": 700,
+          "height": 490,
+          "config": "{\"name\": \"ff2a1cc63b0d588abe8e\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 560, \"y\": 210, \"z\": 0, \"width\": 700, \"height\": 490}}], \"singleVisual\": {\"visualType\": \"tableEx\", \"projections\": {\"Values\": [{\"queryRef\": \"Region.region\"}, {\"queryRef\": \"_Measures.Rice Price (Latest)\"}, {\"queryRef\": \"_Measures.Rice Price Change YoY %\"}, {\"queryRef\": \"_Measures.Rice Inflation (Latest)\"}, {\"queryRef\": \"_Measures.Food Inflation (Latest)\"}, {\"queryRef\": \"_Measures.Headline Inflation (Latest)\"}, {\"queryRef\": \"_Measures.Rice Pressure Flag\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Region\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"region\"}, \"Name\": \"Region.region\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Rice Price (Latest)\"}, \"Name\": \"_Measures.Rice Price (Latest)\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Rice Price Change YoY %\"}, \"Name\": \"_Measures.Rice Price Change YoY %\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Rice Inflation (Latest)\"}, \"Name\": \"_Measures.Rice Inflation (Latest)\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Food Inflation (Latest)\"}, \"Name\": \"_Measures.Food Inflation (Latest)\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Headline Inflation (Latest)\"}, \"Name\": \"_Measures.Headline Inflation (Latest)\"}, {\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Rice Pressure Flag\"}, \"Name\": \"_Measures.Rice Pressure Flag\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Regional detail (latest month)'\"}}}}}]}}}",
+          "filters": "[]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "Food Affordability PH",
+  "dataColors": ["#C2410C", "#64748B", "#15803D", "#B91C1C", "#2563EB", "#A16207"],
+  "background": "#FFFFFF",
+  "foreground": "#1F2937",
+  "tableAccent": "#C2410C",
+  "good": "#15803D",
+  "neutral": "#94A3B8",
+  "bad": "#B91C1C",
+  "maximum": "#B91C1C",
+  "center": "#FDBA74",
+  "minimum": "#FFF7ED",
+  "textClasses": {
+    "title":  { "fontFace": "Segoe UI Semibold", "fontSize": 12, "color": "#1F2937" },
+    "callout": { "fontFace": "Georgia", "fontSize": 28, "color": "#1F2937" },
+    "label":  { "fontFace": "Segoe UI", "fontSize": 10, "color": "#6B7280" }
+  },
+  "visualStyles": {
+    "*": { "*": {
+      "border": [{ "show": true, "color": { "solid": { "color": "#E5E7EB" } }, "radius": 8 }],
+      "background": [{ "show": true, "color": { "solid": { "color": "#FFFFFF" } } }],
+      "dropShadow": [{ "show": false }]
+    } },
+    "page": { "*": { "background": [{ "color": { "solid": { "color": "#FAFAF9" } }, "transparency": 0 }] } }
+  }
+}

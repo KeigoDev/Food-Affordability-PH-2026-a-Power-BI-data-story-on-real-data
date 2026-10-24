@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "FoodAffordabilityPH"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "22b4481b-96a5-5808-8175-b326e76ba782"
+  }
+}

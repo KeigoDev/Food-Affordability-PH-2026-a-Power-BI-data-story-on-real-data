@@ -1,0 +1,1003 @@
+{
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "expressions": [
+      {
+        "name": "RawFile",
+        "kind": "m",
+        "expression": "\"C:\\\\PH POWER BI\\\\food-affordability-powerbi\\\\raw\\\\ph_food_economy_raw.xlsx\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+      },
+      {
+        "name": "fnToNumber",
+        "kind": "m",
+        "expression": [
+          "(value as any) as nullable number =>",
+          "let",
+          "    t = if value = null then \"\" else Text.Trim(Text.From(value, \"en-US\")),",
+          "    result = if t = \"\" or t = \".\" or t = \"..\" then null else Number.FromText(t, \"en-US\")",
+          "in",
+          "    result"
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "name": "Region",
+        "columns": [
+          {
+            "name": "region_key",
+            "dataType": "string",
+            "sourceColumn": "region_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "region",
+            "dataType": "string",
+            "sourceColumn": "region",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "island_group",
+            "dataType": "string",
+            "sourceColumn": "island_group",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "rice_label",
+            "dataType": "string",
+            "sourceColumn": "rice_label",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "cpi_label",
+            "dataType": "string",
+            "sourceColumn": "cpi_label",
+            "summarizeBy": "none",
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Region",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"region_lookup\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {",
+                "        {\"region_key\", type text}, {\"region\", type text}, {\"island_group\", type text},",
+                "        {\"rice_label\", type text}, {\"cpi_label\", type text}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RicePrice",
+        "columns": [
+          {
+            "name": "region_key",
+            "dataType": "string",
+            "sourceColumn": "region_key",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "month",
+            "dataType": "dateTime",
+            "sourceColumn": "month",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "price_php_kg",
+            "dataType": "double",
+            "sourceColumn": "price_php_kg",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "RicePrice",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"psa_rice_prices\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    // wide (one column per month) -> long (one row per region and month)",
+                "    Unpivoted = Table.UnpivotOtherColumns(Promoted, {\"Geolocation\", \"Commodity\"}, \"Period\", \"RawValue\"),",
+                "    NoAnnual = Table.SelectRows(Unpivoted, each not Text.EndsWith([Period], \"Annual\")),",
+                "    Numbers = Table.AddColumn(NoAnnual, \"price_php_kg\", each fnToNumber([RawValue]), type nullable number),",
+                "    NoMissing = Table.SelectRows(Numbers, each [price_php_kg] <> null),",
+                "    // \"2025 January\" -> 2025-01-01",
+                "    Month = Table.AddColumn(NoMissing, \"month\", each Date.FromText(",
+                "        \"1 \" & Text.AfterDelimiter([Period], \" \") & \" \" & Text.BeforeDelimiter([Period], \" \"), [Culture = \"en-US\"]), type date),",
+                "    // \"..NCR - National Capital Region\" -> \"NCR - National Capital Region\"",
+                "    Label = Table.AddColumn(Month, \"rice_label\", each Text.TrimStart([Geolocation], \".\"), type text),",
+                "    Joined = Table.NestedJoin(Label, {\"rice_label\"}, Region, {\"rice_label\"}, \"R\", JoinKind.Inner),",
+                "    Expanded = Table.ExpandTableColumn(Joined, \"R\", {\"region_key\"}),",
+                "    Result = Table.SelectColumns(Expanded, {\"region_key\", \"month\", \"price_php_kg\"})",
+                "in",
+                "    Result"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Inflation",
+        "columns": [
+          {
+            "name": "region_key",
+            "dataType": "string",
+            "sourceColumn": "region_key",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "month",
+            "dataType": "dateTime",
+            "sourceColumn": "month",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "item",
+            "dataType": "string",
+            "sourceColumn": "item",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "yoy_pct",
+            "dataType": "double",
+            "sourceColumn": "yoy_pct",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Inflation",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"psa_inflation\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    Unpivoted = Table.UnpivotOtherColumns(Promoted, {\"Geolocation\", \"Commodity Description\"}, \"Period\", \"RawValue\"),",
+                "    NoAverage = Table.SelectRows(Unpivoted, each not Text.EndsWith([Period], \"Ave\")),",
+                "    Numbers = Table.AddColumn(NoAverage, \"yoy_pct\", each fnToNumber([RawValue]), type nullable number),",
+                "    NoMissing = Table.SelectRows(Numbers, each [yoy_pct] <> null),",
+                "    Month = Table.AddColumn(NoMissing, \"month\", each Date.FromText(",
+                "        \"1 \" & Text.AfterDelimiter([Period], \" \") & \" \" & Text.BeforeDelimiter([Period], \" \"), [Culture = \"en-US\"]), type date),",
+                "    Item = Table.AddColumn(Month, \"item\", each",
+                "        if [Commodity Description] = \"0 - ALL ITEMS\" then \"All items\"",
+                "        else if [Commodity Description] = \"01.1 - FOOD\" then \"Food\"",
+                "        else if [Commodity Description] = \"01.1.1.12 - Rice\" then \"Rice\"",
+                "        else null, type text),",
+                "    KnownItems = Table.SelectRows(Item, each [item] <> null),",
+                "    Label = Table.AddColumn(KnownItems, \"cpi_label\", each Text.TrimStart([Geolocation], \".\"), type text),",
+                "    // inner join also drops \"Areas Outside NCR\", which is not a region",
+                "    Joined = Table.NestedJoin(Label, {\"cpi_label\"}, Region, {\"cpi_label\"}, \"R\", JoinKind.Inner),",
+                "    Expanded = Table.ExpandTableColumn(Joined, \"R\", {\"region_key\"}),",
+                "    Result = Table.SelectColumns(Expanded, {\"region_key\", \"month\", \"item\", \"yoy_pct\"})",
+                "in",
+                "    Result"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "PesoPower",
+        "columns": [
+          {
+            "name": "month",
+            "dataType": "dateTime",
+            "sourceColumn": "month",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "peso_power",
+            "dataType": "double",
+            "sourceColumn": "peso_power",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "PesoPower",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"psa_peso_power\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    Unpivoted = Table.UnpivotOtherColumns(Promoted, {\"Geolocation\", \"Description\"}, \"Period\", \"RawValue\"),",
+                "    NoAverage = Table.SelectRows(Unpivoted, each not Text.EndsWith([Period], \"Ave\")),",
+                "    Numbers = Table.AddColumn(NoAverage, \"peso_power\", each fnToNumber([RawValue]), type nullable number),",
+                "    NoMissing = Table.SelectRows(Numbers, each [peso_power] <> null),",
+                "    Month = Table.AddColumn(NoMissing, \"month\", each Date.FromText(",
+                "        \"1 \" & Text.AfterDelimiter([Period], \" \") & \" \" & Text.BeforeDelimiter([Period], \" \"), [Culture = \"en-US\"]), type date),",
+                "    Result = Table.SelectColumns(Month, {\"month\", \"peso_power\"})",
+                "in",
+                "    Result"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "GDP",
+        "columns": [
+          {
+            "name": "quarter",
+            "dataType": "string",
+            "sourceColumn": "quarter",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "quarter_start",
+            "dataType": "dateTime",
+            "sourceColumn": "quarter_start",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "gdp_growth_pct",
+            "dataType": "double",
+            "sourceColumn": "gdp_growth_pct",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "GDP",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"psa_gdp_growth\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    Unpivoted = Table.UnpivotOtherColumns(Promoted, {\"Type of Expenditure\"}, \"Header\", \"RawValue\"),",
+                "    Numbers = Table.AddColumn(Unpivoted, \"gdp_growth_pct\", each fnToNumber([RawValue]), type nullable number),",
+                "    NoMissing = Table.SelectRows(Numbers, each [gdp_growth_pct] <> null),",
+                "    // \"At Constant 2018 Prices 2025-2026 Q2\" -> year 2026, quarter 2",
+                "    Year = Table.AddColumn(NoMissing, \"year\", each Number.FromText(Text.Middle([Header], Text.Length([Header]) - 7, 4)), Int64.Type),",
+                "    Qtr = Table.AddColumn(Year, \"qtr\", each Number.FromText(Text.End([Header], 1)), Int64.Type),",
+                "    QuarterStart = Table.AddColumn(Qtr, \"quarter_start\", each #date([year], ([qtr] - 1) * 3 + 1, 1), type date),",
+                "    Quarter = Table.AddColumn(QuarterStart, \"quarter\", each Text.From([year]) & \" Q\" & Text.From([qtr]), type text),",
+                "    Result = Table.SelectColumns(Quarter, {\"quarter\", \"quarter_start\", \"gdp_growth_pct\"})",
+                "in",
+                "    Result"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "FX",
+        "columns": [
+          {
+            "name": "month",
+            "dataType": "dateTime",
+            "sourceColumn": "month",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "usd_php",
+            "dataType": "double",
+            "sourceColumn": "usd_php",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "FX",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"ecb_fx\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    Kept = Table.SelectColumns(Promoted, {\"CURRENCY\", \"TIME_PERIOD\", \"OBS_VALUE\"}),",
+                "    Numbers = Table.TransformColumns(Kept, {{\"OBS_VALUE\", fnToNumber, type nullable number}}),",
+                "    Pivoted = Table.Pivot(Numbers, {\"PHP\", \"USD\"}, \"CURRENCY\", \"OBS_VALUE\"),",
+                "    Complete = Table.SelectRows(Pivoted, each [PHP] <> null and [USD] <> null),",
+                "    UsdPhp = Table.AddColumn(Complete, \"usd_php\", each Number.Round([PHP] / [USD], 2), type number),",
+                "    Month = Table.AddColumn(UsdPhp, \"month\", each Date.FromText([TIME_PERIOD] & \"-01\"), type date),",
+                "    Result = Table.SelectColumns(Month, {\"month\", \"usd_php\"})",
+                "in",
+                "    Result"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Hunger",
+        "columns": [
+          {
+            "name": "survey",
+            "dataType": "string",
+            "sourceColumn": "survey",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "month",
+            "dataType": "dateTime",
+            "sourceColumn": "month",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "hunger_pct",
+            "dataType": "double",
+            "sourceColumn": "hunger_pct",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "source",
+            "dataType": "string",
+            "sourceColumn": "source",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Hunger",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"sws_hunger\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    Typed = Table.TransformColumns(Promoted, {",
+                "        {\"fieldwork_start\", each Date.From(_), type date},",
+                "        {\"hunger_pct\", fnToNumber, type number}}),",
+                "    Month = Table.AddColumn(Typed, \"month\", each Date.StartOfMonth([fieldwork_start]), type date),",
+                "    Result = Table.SelectColumns(Month, {\"survey\", \"month\", \"hunger_pct\", \"source\"})",
+                "in",
+                "    Result"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Wage",
+        "columns": [
+          {
+            "name": "wage_order",
+            "dataType": "string",
+            "sourceColumn": "wage_order",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "effective_date",
+            "dataType": "dateTime",
+            "sourceColumn": "effective_date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "daily_wage_php",
+            "dataType": "double",
+            "sourceColumn": "daily_wage_php",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "source",
+            "dataType": "string",
+            "sourceColumn": "source",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Wage",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"ncr_min_wage\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    Typed = Table.TransformColumns(Promoted, {",
+                "        {\"effective_date\", each Date.From(_), type date},",
+                "        {\"daily_wage_php\", fnToNumber, type number}}),",
+                "    Result = Table.SelectColumns(Typed, {\"wage_order\", \"effective_date\", \"daily_wage_php\", \"source\"})",
+                "in",
+                "    Result"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Events",
+        "columns": [
+          {
+            "name": "date",
+            "dataType": "dateTime",
+            "sourceColumn": "date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "event",
+            "dataType": "string",
+            "sourceColumn": "event",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "source",
+            "dataType": "string",
+            "sourceColumn": "source",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Events",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(RawFile), null, true),",
+                "    Sheet = Source{[Item = \"rice_policy_events\", Kind = \"Sheet\"]}[Data],",
+                "    Promoted = Table.PromoteHeaders(Sheet, [PromoteAllScalars = true]),",
+                "    Typed = Table.TransformColumns(Promoted, {{\"date\", each Date.From(_), type date}, {\"event\", Text.From, type text}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Calendar",
+        "dataCategory": "Time",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "Date",
+            "dataType": "dateTime",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd",
+            "isKey": true
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "Year",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Year]",
+            "summarizeBy": "none"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "Month Start",
+            "dataType": "dateTime",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Month Start]",
+            "summarizeBy": "none",
+            "formatString": "mmm yyyy"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "Month",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Month]",
+            "summarizeBy": "none",
+            "sortByColumn": "Month Number"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "Month Number",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Month Number]",
+            "summarizeBy": "none"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "Quarter",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Quarter]",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Calendar",
+            "mode": "import",
+            "source": {
+              "type": "calculated",
+              "expression": "ADDCOLUMNS ( CALENDAR ( DATE ( 2023, 1, 1 ), DATE ( 2026, 12, 31 ) ), \"Year\", YEAR ( [Date] ), \"Month Start\", DATE ( YEAR ( [Date] ), MONTH ( [Date] ), 1 ), \"Month\", FORMAT ( [Date], \"mmm yyyy\" ), \"Month Number\", YEAR ( [Date] ) * 100 + MONTH ( [Date] ), \"Quarter\", YEAR ( [Date] ) & \" Q\" & QUARTER ( [Date] ) )"
+            }
+          }
+        ]
+      },
+      {
+        "name": "_Measures",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "Hidden",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Hidden]",
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "_Measures",
+            "mode": "import",
+            "source": {
+              "type": "calculated",
+              "expression": "ROW ( \"Hidden\", \"\" )"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Selected Region Key",
+            "expression": [
+              "IF ( HASONEVALUE ( Region[region_key] ), VALUES ( Region[region_key] ), \"PH\" )"
+            ]
+          },
+          {
+            "name": "Latest Month",
+            "expression": [
+              "CALCULATE ( MAX ( Inflation[month] ), REMOVEFILTERS () )"
+            ],
+            "formatString": "mmm yyyy"
+          },
+          {
+            "name": "Year Ago Month",
+            "expression": [
+              "EDATE ( [Latest Month], -12 )"
+            ],
+            "formatString": "mmm yyyy"
+          },
+          {
+            "name": "Rice Price",
+            "expression": [
+              "VAR k = [Selected Region Key]",
+              "RETURN CALCULATE ( AVERAGE ( RicePrice[price_php_kg] ), Region[region_key] = k )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "Rice Price (Latest)",
+            "expression": [
+              "VAR m = [Latest Month]",
+              "RETURN CALCULATE ( [Rice Price], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "Rice Price (Year Ago)",
+            "expression": [
+              "VAR m = [Year Ago Month]",
+              "RETURN CALCULATE ( [Rice Price], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "Rice Price Change YoY %",
+            "expression": [
+              "DIVIDE ( [Rice Price (Latest)] - [Rice Price (Year Ago)], [Rice Price (Year Ago)] )"
+            ],
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Rice Price (Low)",
+            "expression": [
+              "VAR k = [Selected Region Key]",
+              "RETURN CALCULATE ( MIN ( RicePrice[price_php_kg] ), REMOVEFILTERS ( 'Calendar' ), Region[region_key] = k )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "Headline Inflation",
+            "expression": [
+              "VAR k = [Selected Region Key]",
+              "RETURN CALCULATE ( AVERAGE ( Inflation[yoy_pct] ), Inflation[item] = \"All items\", Region[region_key] = k )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Food Inflation",
+            "expression": [
+              "VAR k = [Selected Region Key]",
+              "RETURN CALCULATE ( AVERAGE ( Inflation[yoy_pct] ), Inflation[item] = \"Food\", Region[region_key] = k )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Rice Inflation",
+            "expression": [
+              "VAR k = [Selected Region Key]",
+              "RETURN CALCULATE ( AVERAGE ( Inflation[yoy_pct] ), Inflation[item] = \"Rice\", Region[region_key] = k )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Headline Inflation (Latest)",
+            "expression": [
+              "VAR m = [Latest Month]",
+              "RETURN CALCULATE ( [Headline Inflation], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Food Inflation (Latest)",
+            "expression": [
+              "VAR m = [Latest Month]",
+              "RETURN CALCULATE ( [Food Inflation], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Rice Inflation (Latest)",
+            "expression": [
+              "VAR m = [Latest Month]",
+              "RETURN CALCULATE ( [Rice Inflation], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Rice Inflation (National Latest)",
+            "expression": [
+              "CALCULATE ( [Rice Inflation (Latest)], REMOVEFILTERS ( Region ), Region[region_key] = \"PH\" )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Rice Inflation vs National (pts)",
+            "expression": [
+              "[Rice Inflation (Latest)] - [Rice Inflation (National Latest)]"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Regional Rice Inflation",
+            "expression": [
+              "IF ( [Selected Region Key] = \"PH\", BLANK (), [Rice Inflation (Latest)] )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Rice Pressure Flag",
+            "expression": [
+              "IF ( [Rice Inflation vs National (pts)] > 0, \"Above national\", \"At or below national\" )"
+            ]
+          },
+          {
+            "name": "Inflation Target Low",
+            "expression": [
+              "2"
+            ],
+            "formatString": "0"
+          },
+          {
+            "name": "Inflation Target High",
+            "expression": [
+              "4"
+            ],
+            "formatString": "0"
+          },
+          {
+            "name": "Months Above Target",
+            "expression": [
+              "COUNTROWS (",
+              "    FILTER (",
+              "        CALCULATETABLE ( Inflation, Inflation[item] = \"All items\", Region[region_key] = \"PH\" ),",
+              "        Inflation[yoy_pct] > [Inflation Target High]",
+              "    )",
+              ")"
+            ],
+            "formatString": "0"
+          },
+          {
+            "name": "Inflation Status",
+            "expression": [
+              "VAR v = [Headline Inflation (Latest)]",
+              "RETURN IF ( v > [Inflation Target High], \"Above target\", IF ( v < [Inflation Target Low], \"Below target\", \"Within target\" ) )"
+            ]
+          },
+          {
+            "name": "USD PHP",
+            "expression": [
+              "AVERAGE ( FX[usd_php] )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "USD PHP (Latest)",
+            "expression": [
+              "VAR m = [Latest Month]",
+              "RETURN CALCULATE ( [USD PHP], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "USD PHP (Year Ago)",
+            "expression": [
+              "VAR m = [Year Ago Month]",
+              "RETURN CALCULATE ( [USD PHP], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "Peso Weakening YoY %",
+            "expression": [
+              "DIVIDE ( [USD PHP (Latest)] - [USD PHP (Year Ago)], [USD PHP (Year Ago)] )"
+            ],
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Peso Purchasing Power",
+            "expression": [
+              "AVERAGE ( PesoPower[peso_power] )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "Peso Purchasing Power (Latest)",
+            "expression": [
+              "VAR m = [Latest Month]",
+              "RETURN CALCULATE ( [Peso Purchasing Power], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "GDP Growth",
+            "expression": [
+              "AVERAGE ( GDP[gdp_growth_pct] )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Latest GDP Quarter",
+            "expression": [
+              "CALCULATE ( MAX ( GDP[quarter_start] ), REMOVEFILTERS () )"
+            ],
+            "formatString": "mmm yyyy"
+          },
+          {
+            "name": "GDP Growth (Latest)",
+            "expression": [
+              "VAR q = [Latest GDP Quarter]",
+              "RETURN CALCULATE ( [GDP Growth], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = q )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "GDP Growth (Year Earlier)",
+            "expression": [
+              "VAR q = EDATE ( [Latest GDP Quarter], -12 )",
+              "RETURN CALCULATE ( [GDP Growth], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = q )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "GDP Slowdown (pts)",
+            "expression": [
+              "[GDP Growth (Latest)] - [GDP Growth (Year Earlier)]"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Latest GDP Quarter Label",
+            "expression": [
+              "VAR q = [Latest GDP Quarter]",
+              "RETURN CALCULATE ( MAX ( GDP[quarter] ), REMOVEFILTERS (), GDP[quarter_start] = q )"
+            ]
+          },
+          {
+            "name": "Hunger Rate",
+            "expression": [
+              "AVERAGE ( Hunger[hunger_pct] )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Hunger Rate (Latest)",
+            "expression": [
+              "VAR s = CALCULATE ( MAX ( Hunger[month] ), REMOVEFILTERS () )",
+              "RETURN CALCULATE ( [Hunger Rate], REMOVEFILTERS (), Hunger[month] = s )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Hunger Rate (Low)",
+            "expression": [
+              "CALCULATE ( MIN ( Hunger[hunger_pct] ), REMOVEFILTERS () )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "NCR Min Wage",
+            "expression": [
+              "VAR d = MIN ( 'Calendar'[Date] ) + 14",
+              "VAR eff = CALCULATE ( MAX ( Wage[effective_date] ), REMOVEFILTERS ( Wage ), Wage[effective_date] <= d )",
+              "RETURN CALCULATE ( MAX ( Wage[daily_wage_php] ), REMOVEFILTERS ( Wage ), Wage[effective_date] = eff )"
+            ],
+            "formatString": "0"
+          },
+          {
+            "name": "NCR Rice Price",
+            "expression": [
+              "CALCULATE ( AVERAGE ( RicePrice[price_php_kg] ), REMOVEFILTERS ( Region ), Region[region_key] = \"NCR\" )"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "Kg Rice per NCR Wage",
+            "expression": [
+              "DIVIDE ( [NCR Min Wage], [NCR Rice Price] )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Kg Rice per NCR Wage (Latest)",
+            "expression": [
+              "VAR m = [Latest Month]",
+              "RETURN CALCULATE ( [Kg Rice per NCR Wage], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Kg Rice per NCR Wage (Peak)",
+            "expression": [
+              "VAR lastM = [Latest Month]",
+              "VAR months = CALCULATETABLE ( VALUES ( 'Calendar'[Month Start] ), REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] <= lastM )",
+              "RETURN",
+              "    MAXX (",
+              "        months,",
+              "        VAR ms = 'Calendar'[Month Start]",
+              "        RETURN CALCULATE ( [Kg Rice per NCR Wage], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Month Start] = ms )",
+              "    )"
+            ],
+            "formatString": "0.0"
+          },
+          {
+            "name": "Headline",
+            "expression": [
+              "\"Inflation \" & FORMAT ( [Headline Inflation (Latest)], \"0.0\" ) & \"% · rice \"",
+              "    & FORMAT ( [Rice Inflation (Latest)], \"+0.0;-0.0\" ) & \"% · ₱\"",
+              "    & FORMAT ( [USD PHP (Latest)], \"0.00\" ) & \" per US$\""
+            ]
+          },
+          {
+            "name": "Economy Headline",
+            "expression": [
+              "\"GDP grew \" & FORMAT ( [GDP Growth (Latest)], \"0.0\" ) & \"% in \" & [Latest GDP Quarter Label]",
+              "    & \", down \" & FORMAT ( -[GDP Slowdown (pts)], \"0.0\" ) & \" pts from a year earlier\""
+            ]
+          },
+          {
+            "name": "Inflation Colour",
+            "expression": [
+              "IF ( [Headline Inflation] > [Inflation Target High], \"#B91C1C\", \"#15803D\" )"
+            ]
+          },
+          {
+            "name": "Rice Pressure Colour",
+            "expression": [
+              "IF ( [Rice Inflation vs National (pts)] > 0, \"#B91C1C\", \"#64748B\" )"
+            ]
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "5a620eed508205d9e1353e51bb7b0bbe",
+        "fromTable": "RicePrice",
+        "fromColumn": "region_key",
+        "toTable": "Region",
+        "toColumn": "region_key"
+      },
+      {
+        "name": "994847ff2ab5c7e502d0c25516dc9a73",
+        "fromTable": "Inflation",
+        "fromColumn": "region_key",
+        "toTable": "Region",
+        "toColumn": "region_key"
+      },
+      {
+        "name": "4fdd926c97d8d01118cafeec22549501",
+        "fromTable": "RicePrice",
+        "fromColumn": "month",
+        "toTable": "Calendar",
+        "toColumn": "Date"
+      },
+      {
+        "name": "25b73116250b45026047fafb416eecb3",
+        "fromTable": "Inflation",
+        "fromColumn": "month",
+        "toTable": "Calendar",
+        "toColumn": "Date"
+      },
+      {
+        "name": "f88595564f7f2094071a5c01386337db",
+        "fromTable": "FX",
+        "fromColumn": "month",
+        "toTable": "Calendar",
+        "toColumn": "Date"
+      },
+      {
+        "name": "05dc79f2467ec610a86dbafa17a7d508",
+        "fromTable": "PesoPower",
+        "fromColumn": "month",
+        "toTable": "Calendar",
+        "toColumn": "Date"
+      },
+      {
+        "name": "ea5555661e826a9e49ca6c32707b5187",
+        "fromTable": "Hunger",
+        "fromColumn": "month",
+        "toTable": "Calendar",
+        "toColumn": "Date"
+      },
+      {
+        "name": "7a594ca30577c29ea2c9f6fdd254f5f3",
+        "fromTable": "GDP",
+        "fromColumn": "quarter_start",
+        "toTable": "Calendar",
+        "toColumn": "Date"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      }
+    ]
+  }
+}
