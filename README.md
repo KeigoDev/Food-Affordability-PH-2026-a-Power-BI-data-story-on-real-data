@@ -33,6 +33,8 @@ The ready-made report is the Power BI Project **`powerbi/FoodAffordabilityPH.pbi
 `preview/powerbi-page*.jpg` shows where each visual sits and what it should show. These images are drawn from the report file by `preview_report.py`; they aren't Power BI screenshots.
 
 ## Interactive web dashboard
+**Every KPI follows the filters.** The cards and story numbers show the **To** month of the date slicer compared with 12 months earlier, and lows and peaks are measured within the selected range. On page 4, the island-group slicer switches the cards to that group's average and recounts the regions above the national rate (regional data is the latest-month snapshot, so the date slicer doesn't apply there). Page 1 also shows a **dollar forecast to December 2026**: a straight-line trend over the last 12 monthly USD/PHP averages with a 95% range. It's a simple projection, not an official forecast, and it shows only when the date range ends at the latest month.
+
 **Double-click `dashboard.html`** to open the interactive dashboard in any browser (it needs internet once to load the d3 chart library). It's a single file with the real data built in, and it follows your light/dark system theme. The header has two download buttons: **Download Power BI project (.pbip)** gives a zip with the Power BI project, raw data, theme, logo, DAX, Power Query and this guide (also saved as `downloads/FoodAffordabilityPH_PowerBI.zip`), and **Download raw data (Excel)** gives the extracted workbook. Both files are built into `dashboard.html`, so the buttons work even when the HTML is shared on its own. After refreshing the data, rebuild it with `python3 build_web_dashboard.py`. Its page source is `web-dashboard/index.html`. It has the same 4 pages (as tabs), a date-range slicer (From/To, "Last 12 months", "2026 only"), an island-group slicer, cross-filtering (click a region and the cards switch to it), sortable tables, hover tooltips, and click-to-compare on the hunger chart. Screenshots: `preview/web-*.jpg`.
 
 ## 2. Stages of the process
@@ -117,6 +119,7 @@ Apply the theme (**View → Themes → Browse** → `theme.json`), and put `logo
 - Cards: `GDP Growth (Latest)`, `USD PHP (Latest)`, `Peso Weakening YoY %`, `Headline Inflation (Latest)`, `Peso Purchasing Power (Latest)`
 - Column chart: X = `GDP[quarter]`, Y = `GDP Growth`
 - Line chart: X = `Calendar[Month]`, Y = `USD PHP` (blue)
+  - **Dollar forecast to December 2026:** select the chart → **Analytics** pane → **Forecast** → Units: Points, Forecast length: 3, Confidence interval: 95% → Apply. (The web dashboard shows the same idea as a straight-line trend over the last 12 months.)
 - Line chart: X = `Calendar[Month]`, Y = `Headline Inflation`, `Food Inflation`. Analytics → constant lines at 2 and 4 (BSP target band). Line colour → fx → `Inflation Colour`.
 - Text box with the `Economy Headline` value
 

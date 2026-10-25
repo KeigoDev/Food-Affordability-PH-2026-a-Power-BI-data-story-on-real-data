@@ -85,7 +85,7 @@
     <div><div class="kicker">Food Affordability PH · interactive dashboard</div>
     <h1 id="top">The 2026 rice shock in the Philippines</h1></div>
   </div>
-  <p class="srcline"><span class="dot"></span>Real data: PSA, ECB, SWS, DOLE wage boards, Department of Agriculture · latest month <span data-source="kpi" data-field="latest_label">—</span> · same pages, measures and slicers as the Power BI report</p>
+  <p class="srcline"><span class="dot"></span>Real data: PSA, ECB, SWS, DOLE wage boards, Department of Agriculture · KPIs show <span data-source="kpi" data-field="latest_label">—</span> · same pages, measures and slicers as the Power BI report</p>
 
   <div class="tabs" role="tablist" id="tabs">
     <button role="tab" data-page="economy">1 · Bigger picture</button>
@@ -107,14 +107,15 @@
     <p class="story">Real GDP growth fell from <b data-source="kpi" data-field="gdp_ya">—</b>% to <b data-source="kpi" data-field="gdp">—</b>% in a year. A weaker peso makes imported rice and fuel cost more, and ₱1 from 2018 now buys ₱<b data-source="kpi" data-field="power">—</b> worth of goods. Use the date slicer to zoom the charts.</p>
     <div class="tiles">
       <div class="tile t-muted"><div class="lbl">GDP growth, <span data-source="kpi" data-field="gdp_q">—</span></div><div class="num"><span data-source="kpi" data-field="gdp">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="gdp_ya">—</span>% a year earlier</div></div>
-      <div class="tile t-fx"><div class="lbl">Pesos per US dollar</div><div class="num">₱<span data-source="kpi" data-field="usd">—</span></div><div class="sub">monthly average, latest month</div></div>
-      <div class="tile t-fx"><div class="lbl">Peso vs a year ago</div><div class="num bad"><span data-source="kpi" data-field="peso_weaker_pct">—</span>% weaker</div><div class="sub">ECB reference rates</div></div>
+      <div class="tile t-fx"><div class="lbl">Pesos per US dollar</div><div class="num">₱<span data-source="kpi" data-field="usd">—</span></div><div class="sub">monthly average, <span data-source="kpi" data-field="latest_label">—</span></div></div>
+      <div class="tile t-fx"><div class="lbl">Peso vs a year ago</div><div class="num bad"><span data-source="kpi" data-field="peso_weaker_pct">—</span><span id="peso-word">% weaker</span></div><div class="sub">ECB reference rates</div></div>
       <div class="tile t-bad"><div class="lbl">Headline inflation</div><div class="num bad"><span data-source="kpi" data-field="infl">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="infl_ya">—</span>% · target 2–4%</div></div>
+      <div class="tile t-fx"><div class="lbl">Dollar forecast, <span id="fc-label">—</span></div><div class="num">₱<span id="fc-value" data-source="fx_forecast" data-field="usd_php_forecast">—</span></div><div class="sub">range ₱<span id="fc-low" data-source="fx_forecast" data-field="low">—</span>–<span id="fc-high" data-source="fx_forecast" data-field="high">—</span> · trend projection</div></div>
       <div class="tile t-muted"><div class="lbl">Purchasing power of ₱1</div><div class="num">₱<span data-source="kpi" data-field="power">—</span></div><div class="sub">2018 = ₱1.00</div></div>
     </div>
     <div class="grid3">
       <div class="card"><h3>GDP growth by quarter</h3><p class="note">Real GDP, % vs same quarter a year earlier · PSA</p><div class="chart" id="gdp-chart" data-source="gdp"></div></div>
-      <div class="card"><h3>Pesos per US dollar</h3><p class="note">Monthly average · higher = stronger dollar · ECB</p><div class="chart" id="fx-chart" data-source="nat"></div></div>
+      <div class="card"><h3>Pesos per US dollar</h3><p class="note">Monthly average · higher = stronger dollar · ECB · dashed: trend projection to year end, shaded 95% range</p><div class="chart" id="fx-chart" data-source="nat"></div></div>
       <div class="card"><h3>Inflation: headline vs food</h3><p class="note">% vs a year earlier · shaded: BSP 2–4% target · PSA</p><div class="chart" id="infl-chart" data-source="nat"></div></div>
     </div>
   </section>
@@ -123,11 +124,11 @@
     <h2>Import policy swung rice prices down, then sharply up</h2>
     <p class="story">After the import tariff was cut, retail rice fell to ₱<b data-source="kpi" data-field="rice_low">—</b>/kg. Imports were then suspended and a new tariff started, and prices jumped back to ₱<b data-source="kpi" data-field="rice_price">—</b>. Hover a chart for monthly values.</p>
     <div class="tiles">
-      <div class="tile t-rice"><div class="lbl">Rice, regular-milled</div><div class="num">₱<span data-source="kpi" data-field="rice_price">—</span></div><div class="sub">per kg, latest month</div></div>
-      <div class="tile t-rice"><div class="lbl">Rice price vs a year ago</div><div class="num bad">+<span data-source="kpi" data-field="rice_change_pct">—</span>%</div><div class="sub">PSA retail prices</div></div>
-      <div class="tile t-bad"><div class="lbl">Rice inflation</div><div class="num bad">+<span data-source="kpi" data-field="rice_infl">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="rice_infl_ya">—</span>% a year earlier</div></div>
-      <div class="tile t-rice"><div class="lbl">Kg of rice per NCR wage day</div><div class="num"><span data-source="kpi" data-field="kg">—</span> kg</div><div class="sub">latest month</div></div>
-      <div class="tile t-ok"><div class="lbl">Best point</div><div class="num"><span data-source="kpi" data-field="kg_peak">—</span> kg</div><div class="sub">when rice was cheapest</div></div>
+      <div class="tile t-rice"><div class="lbl">Rice, regular-milled</div><div class="num">₱<span data-source="kpi" data-field="rice_price">—</span></div><div class="sub">per kg, <span data-source="kpi" data-field="latest_label">—</span></div></div>
+      <div class="tile t-rice"><div class="lbl">Rice price vs a year ago</div><div class="num bad"><span data-source="kpi" data-field="rice_change_pct">—</span>%</div><div class="sub">PSA retail prices</div></div>
+      <div class="tile t-bad"><div class="lbl">Rice inflation</div><div class="num bad"><span data-source="kpi" data-field="rice_infl">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="rice_infl_ya">—</span>% a year earlier</div></div>
+      <div class="tile t-rice"><div class="lbl">Kg of rice per NCR wage day</div><div class="num"><span data-source="kpi" data-field="kg">—</span> kg</div><div class="sub"><span data-source="kpi" data-field="latest_label">—</span></div></div>
+      <div class="tile t-ok"><div class="lbl">Best point in range</div><div class="num"><span data-source="kpi" data-field="kg_peak">—</span> kg</div><div class="sub">most rice per wage day</div></div>
     </div>
     <div class="grid">
       <div class="card"><h3>Rice retail price, Philippines</h3><p class="note">Regular-milled, ₱ per kg · numbered lines: policy changes · PSA</p>
@@ -142,7 +143,7 @@
     <p class="story">SWS finds <b data-source="kpi" data-field="hunger">—</b>% of families went hungry in the latest survey. It never fell below <b data-source="kpi" data-field="hunger_low">—</b>% even when rice was cheapest. Click a bar to compare it with the latest survey.</p>
     <div class="tiles">
       <div class="tile t-bad"><div class="lbl">Families going hungry, <span data-source="kpi" data-field="hunger_survey">—</span></div><div class="num"><span data-source="kpi" data-field="hunger">—</span>%</div><div class="sub">SWS, past three months</div></div>
-      <div class="tile t-muted"><div class="lbl">Lowest in this period</div><div class="num"><span data-source="kpi" data-field="hunger_low">—</span>%</div><div class="sub">SWS surveys since Mar 2025</div></div>
+      <div class="tile t-muted"><div class="lbl">Lowest in the selected range</div><div class="num"><span data-source="kpi" data-field="hunger_low">—</span>%</div><div class="sub">SWS surveys</div></div>
     </div>
     <p class="hint" id="hunger-hint"></p>
     <div class="card"><h3>Families experiencing involuntary hunger</h3><p class="note">% of families, per SWS survey · click a bar</p><div class="chart" id="hunger-chart" data-source="hunger"></div></div>
@@ -195,29 +196,58 @@
 </div>
 
 <script>
+// KPIs for a date range: values at the "to" month vs 12 months earlier; lows and peaks within the range.
+const kpiFor = (nat, gdp, hunger, from = '0000', to = '9999') => {
+  const byM = (a, b) => a.month < b.month ? -1 : 1;
+  const n = [...nat].sort(byM), inr = n.filter(r => r.month >= from && r.month <= to), l = inr[inr.length - 1];
+  if (!l) return [{}];
+  const ya = n.find(r => r.month === (Number(l.month.slice(0, 4)) - 1) + l.month.slice(4));
+  const g = [...gdp].sort((a, b) => a.quarter_start < b.quarter_start ? -1 : 1).filter(q => q.quarter_start <= l.month);
+  const gl = g[g.length - 1], gya = gl && g.find(r => r.quarter === (Number(gl.quarter.slice(0, 4)) - 1) + gl.quarter.slice(4));
+  const h = [...hunger].sort(byM).filter(r => r.month >= from && r.month <= to), hl = h[h.length - 1];
+  const v = (r, k) => r ? +r[k] : null;
+  const pct = (a, b) => a == null || b == null ? null : Math.round((b / a - 1) * 1000) / 10;
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return [{
+    latest_label: months[Number(l.month.slice(5, 7)) - 1] + ' ' + l.month.slice(0, 4),
+    infl: v(l, 'headline_inflation_pct'), infl_ya: v(ya, 'headline_inflation_pct'),
+    rice_infl: v(l, 'rice_inflation_pct'), rice_infl_ya: v(ya, 'rice_inflation_pct'),
+    rice_price: v(l, 'rice_price_php_kg'), rice_change_pct: pct(v(ya, 'rice_price_php_kg'), v(l, 'rice_price_php_kg')),
+    rice_low: Math.min(...inr.map(r => +r.rice_price_php_kg)),
+    usd: v(l, 'usd_php'), peso_weaker_pct: pct(v(ya, 'usd_php'), v(l, 'usd_php')), power: v(l, 'peso_power'),
+    kg: v(l, 'kg_rice_per_ncr_wage'), kg_peak: Math.max(...inr.map(r => +r.kg_rice_per_ncr_wage)),
+    gdp: v(gl, 'gdp_growth_pct'), gdp_ya: v(gya, 'gdp_growth_pct'), gdp_q: gl ? gl.quarter : null,
+    hunger: v(hl, 'hunger_pct'), hunger_survey: hl ? hl.survey : null, hunger_low: h.length ? Math.min(...h.map(r => +r.hunger_pct)) : null
+  }];
+};
+window.kpiFor = kpiFor;
+
 dash.calc('kpi', {
   inputs: ['nat', 'gdp', 'hunger'],
   title: 'Headline figures',
   description: 'Latest month vs a year earlier for inflation, rice, USD/PHP; latest GDP quarter vs a year earlier; latest and lowest SWS hunger; kg of rice per NCR wage.',
-  fn: (nat, gdp, hunger) => {
-    const n = [...nat].sort((a, b) => a.month < b.month ? -1 : 1), l = n[n.length - 1];
-    const ya = n.find(r => r.month === (Number(l.month.slice(0, 4)) - 1) + l.month.slice(4)) || n[0];
-    const g = [...gdp].sort((a, b) => a.quarter_start < b.quarter_start ? -1 : 1), gl = g[g.length - 1];
-    const gya = g.find(r => r.quarter === (Number(gl.quarter.slice(0, 4)) - 1) + gl.quarter.slice(4)) || g[0];
-    const h = [...hunger].sort((a, b) => a.month < b.month ? -1 : 1), hl = h[h.length - 1];
-    const pct = (a, b) => Math.round((b / a - 1) * 1000) / 10;
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return [{
-      latest_label: months[Number(l.month.slice(5, 7)) - 1] + ' ' + l.month.slice(0, 4),
-      infl: +l.headline_inflation_pct, infl_ya: +ya.headline_inflation_pct,
-      rice_infl: +l.rice_inflation_pct, rice_infl_ya: +ya.rice_inflation_pct,
-      rice_price: +l.rice_price_php_kg, rice_change_pct: pct(+ya.rice_price_php_kg, +l.rice_price_php_kg),
-      rice_low: Math.min(...n.map(r => +r.rice_price_php_kg)),
-      usd: +l.usd_php, peso_weaker_pct: pct(+ya.usd_php, +l.usd_php), power: +l.peso_power,
-      kg: +l.kg_rice_per_ncr_wage, kg_peak: Math.max(...n.map(r => +r.kg_rice_per_ncr_wage)),
-      gdp: +gl.gdp_growth_pct, gdp_ya: +gya.gdp_growth_pct, gdp_q: gl.quarter,
-      hunger: +hl.hunger_pct, hunger_survey: hl.survey, hunger_low: Math.min(...h.map(r => +r.hunger_pct))
-    }];
+  fn: (nat, gdp, hunger) => kpiFor(nat, gdp, hunger)
+});
+
+// shortcut: straight-line trend over the last 12 months, not an econometric model; use Power BI's built-in Forecast or ETS/ARIMA for a real forecast.
+dash.calc('fx_forecast', {
+  inputs: ['nat'],
+  title: 'USD/PHP trend projection',
+  description: 'Linear trend fitted to the last 12 monthly USD/PHP averages, projected to December of the latest year, with a 95% range from the fit residuals.',
+  fn: (nat) => {
+    const n = [...nat].sort((a, b) => a.month < b.month ? -1 : 1).slice(-12);
+    if (n.length < 6) return [];
+    const x = n.map((r, i) => i), y = n.map(r => +r.usd_php), k = n.length;
+    const mx = x.reduce((a, b) => a + b) / k, my = y.reduce((a, b) => a + b) / k;
+    const slope = x.reduce((a, xi, i) => a + (xi - mx) * (y[i] - my), 0) / x.reduce((a, xi) => a + (xi - mx) ** 2, 0);
+    const sd = Math.sqrt(y.reduce((a, yi, i) => a + (yi - (my + slope * (x[i] - mx))) ** 2, 0) / (k - 2));
+    const last = n[k - 1].month, yr = Number(last.slice(0, 4)), out = [];
+    for (let m = Number(last.slice(5, 7)) + 1, h = 1; m <= 12; m++, h++) {
+      const f = my + slope * (k - 1 + h - mx);
+      out.push({ month: `${yr}-${String(m).padStart(2, '0')}-01`, usd_php_forecast: Math.round(f * 100) / 100,
+                 low: Math.round((f - 1.96 * sd) * 100) / 100, high: Math.round((f + 1.96 * sd) * 100) / 100 });
+    }
+    return out;
   }
 });
 
@@ -280,19 +310,20 @@ dash.calc('above', {
   };
 
   // Lines over months. series: [{key, name, color, fmt}]; refs: [{date, n}]; band: {lo, hi}
-  const lineChart = (el, rows, series, yFmt, refs, band) => {
+  const lineChart = (el, rows, series, yFmt, refs, band, fc) => {
     if (rows.length < 2) return emptyMsg(el, 'Widen the date range to see this chart');
     el.innerHTML = ''; el.classList.remove('dash-skeleton');
     const W = el.clientWidth || 320, H = 240;
     const data = rows.map(r => ({ date: parse(r.month), ...Object.fromEntries(series.map(s => [s.key, +r[s.key]])) }));
     const svg = newSvg(el, W, H);
-    const ys = d3.extent(data.flatMap(d => series.map(s => d[s.key])).concat(band ? [band.lo, band.hi] : []));
+    const fcd = (fc || []).map(r => ({ date: parse(r.month), v: +r.usd_php_forecast, lo: +r.low, hi: +r.high }));
+    const ys = d3.extent(data.flatMap(d => series.map(s => d[s.key])).concat(band ? [band.lo, band.hi] : [], fcd.flatMap(d => [d.lo, d.hi])));
     const pad = (ys[1] - ys[0]) * 0.1 || 1;
     const y0 = d3.scaleLinear([ys[0] - pad, ys[1] + pad], [0, 1]).nice();
     const last = data[data.length - 1];
-    const ends = series.map(s => `${s.name} ${s.fmt(last[s.key])}`);
-    const m = { t: refs ? 16 : 8, r: series.length > 1 ? measure(svg, ends) + 10 : 8, b: 24, l: measure(svg, y0.ticks(4).map(yFmt)) + 10 };
-    const x = d3.scaleUtc(d3.extent(data, d => d.date), [m.l, W - m.r]);
+    const ends = fcd.length ? [`${fmtMonth(fcd[fcd.length - 1].date)} ${series[0].fmt(fcd[fcd.length - 1].v)}`] : series.map(s => `${s.name} ${s.fmt(last[s.key])}`);
+    const m = { t: refs ? 16 : 8, r: series.length > 1 || fcd.length ? measure(svg, ends) + 10 : 8, b: 24, l: measure(svg, y0.ticks(4).map(yFmt)) + 10 };
+    const x = d3.scaleUtc(d3.extent(data.map(d => d.date).concat(fcd.map(d => d.date))), [m.l, W - m.r]);
     const y = d3.scaleLinear(y0.domain(), [H - m.b, m.t]);
     if (band) svg.append('rect').attr('x', m.l).attr('width', W - m.l - m.r).attr('y', y(band.hi)).attr('height', y(band.lo) - y(band.hi))
       .attr('fill', 'var(--color-ok)').attr('opacity', .08);
@@ -310,6 +341,16 @@ dash.calc('above', {
     });
     series.forEach(s => svg.append('path').datum(data).attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', 2)
       .attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('d', d3.line().x(d => x(d.date)).y(d => y(d[s.key]))));
+    if (fcd.length) {
+      const s0 = series[0], start = { date: last.date, v: last[s0.key], lo: last[s0.key], hi: last[s0.key] }, path = [start, ...fcd];
+      svg.append('path').datum(path).attr('fill', s0.color).attr('opacity', .12)
+        .attr('d', d3.area().x(d => x(d.date)).y0(d => y(d.lo)).y1(d => y(d.hi)));
+      svg.append('path').datum(path).attr('fill', 'none').attr('stroke', s0.color).attr('stroke-width', 2).attr('stroke-dasharray', '5 4')
+        .attr('d', d3.line().x(d => x(d.date)).y(d => y(d.v)));
+      const e = fcd[fcd.length - 1];
+      svg.append('text').attr('x', W - m.r + 6).attr('y', y(e.v)).attr('dy', '0.32em').attr('fill', s0.color)
+        .style('font-size', 'var(--ui-font-size-caption)').text(ends[0]);
+    }
     if (series.length > 1) {
       const pos = series.map(s => ({ s, y: y(last[s.key]) })).sort((a, b) => a.y - b.y);
       for (let i = 1; i < pos.length; i++) if (pos[i].y - pos[i - 1].y < 14) pos[i].y = pos[i - 1].y + 14;
@@ -467,10 +508,11 @@ dash.calc('above', {
     });
   });
 
-  const digits = { rice_price: '.2f', rice_low: '.2f', usd: '.2f', power: '.2f', n: '.0f', total: '.0f' };
-  const fill = src => {
+  const digits = { rice_price: '.2f', rice_low: '.2f', usd: '.2f', power: '.2f', n: '.0f', total: '.0f', rice_change_pct: '+.1f', rice_infl: '+.1f', rice_infl_ya: '+.1f' };
+  // shortcut: filtered values keep their data-source="kpi" mark, which describes the unfiltered default view.
+  const fill = (src, given) => {
     const d = dash.data(src);
-    const row = d.status === 'ok' ? (d.data[0] || {}) : null;
+    const row = given !== undefined ? given : d.status === 'ok' ? (d.data[0] || {}) : null;
     document.querySelectorAll(`.fa [data-source="${src}"][data-field]`).forEach(el => {
       if (el.tagName === 'TH' || el.dataset.dyn) return;
       el.classList.toggle('dash-skeleton', d.status === 'loading');
@@ -480,9 +522,10 @@ dash.calc('above', {
   };
 
   // Page-4 cards follow the selected region (cross-filter); with none selected they show the Philippines.
-  const crossFilterCards = (regions, kpi) => {
+  const crossFilterCards = (regions, kpi, groupRows) => {
     const r = st.region && regions.find(x => x.region_key === st.region);
-    const name = r ? r.region : 'Philippines';
+    const avg = !r && st.island !== 'All' && groupRows.length;
+    const name = r ? r.region : avg ? `${st.island} (average of ${groupRows.length} regions)` : 'Philippines';
     [['c1', 'rice_inflation_pct', 'rice_infl', 'Rice inflation', '.1f'], ['c2', 'rice_price_php_kg', 'rice_price', 'Rice price', '.2f'],
      ['c3', 'headline_inflation_pct', 'infl', 'Headline inflation', '.1f']].forEach(([id, rf, kf, label, fmt]) => {
       const el = document.getElementById(id);
@@ -490,6 +533,9 @@ dash.calc('above', {
       if (r) {
         el.dataset.dyn = '1'; el.dataset.source = 'regions'; el.dataset.field = rf; el.dataset.where = 'region_key=' + encodeURIComponent(r.region_key);
         el.textContent = d3.format(fmt)(+r[rf]);
+      } else if (avg) {
+        el.dataset.dyn = '1'; el.removeAttribute('data-source'); el.removeAttribute('data-field'); delete el.dataset.where;
+        el.textContent = d3.format(fmt)(d3.mean(groupRows, x => +x[rf]));
       } else {
         delete el.dataset.dyn; delete el.dataset.where; el.dataset.source = 'kpi'; el.dataset.field = kf;
         el.textContent = kpi && kpi[kf] != null ? d3.format(fmt)(kpi[kf]) : '—';
@@ -498,9 +544,8 @@ dash.calc('above', {
   };
 
   draw = () => {
-    fill('kpi'); fill('above');
     const n = dash.data('nat'), g = dash.data('gdp'), h = dash.data('hunger'), ev = dash.data('events'), rg = dash.data('regions'), k = dash.data('kpi');
-    const kpi = k.status === 'ok' ? k.data[0] : null;
+    const kpi = k.status === 'ok' ? k.data[0] : null;  // full-range figures: page 4 compares with the regional snapshot
 
     // date slicer options come from the data's months
     if (n.status === 'ok' && n.data.length) {
@@ -513,6 +558,19 @@ dash.calc('above', {
       fromSel.value = st.from; toSel.value = st.to;
     }
     const inRange = m => (!st.from || m >= st.from) && (!st.to || m <= st.to);
+    const allOk = [n, g, h].every(x => x.status === 'ok');
+    const kp = allOk ? kpiFor(n.data, g.data, h.data, st.from || undefined, st.to || undefined)[0] : undefined;
+    fill('kpi', kp);
+    if (kp && kp.peso_weaker_pct != null) {
+      document.querySelector('#economy [data-field=peso_weaker_pct]').textContent = f1(Math.abs(kp.peso_weaker_pct));
+      document.getElementById('peso-word').textContent = kp.peso_weaker_pct >= 0 ? '% weaker' : '% stronger';
+    }
+    const fcd = dash.data('fx_forecast'), fe = fcd.status === 'ok' && fcd.data.length ? fcd.data[fcd.data.length - 1] : null;
+    ['fc-value', 'fc-low', 'fc-high'].forEach(id => { const el = document.getElementById(id); el.dataset.row = fe ? fcd.data.length - 1 : ''; });
+    document.getElementById('fc-label').textContent = fe ? fmtMonth(parse(fe.month)) : '—';
+    document.getElementById('fc-value').textContent = fe ? f2(fe.usd_php_forecast) : '—';
+    document.getElementById('fc-low').textContent = fe ? f2(fe.low) : '—';
+    document.getElementById('fc-high').textContent = fe ? f2(fe.high) : '—';
     qbox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
 
     if (st.page === 'economy') {
@@ -525,7 +583,8 @@ dash.calc('above', {
     if (st.page === 'economy') {
       const fx = document.getElementById('fx-chart'), inf = document.getElementById('infl-chart');
       if (n.status === 'ok') {
-        lineChart(fx, rows, [{ key: 'usd_php', name: 'USD/PHP', color: '#2563EB', fmt: v => '₱' + f2(v) }], d3.format('.0f'));
+        const fcr = dash.data('fx_forecast'), atLatest = rows.length && rows[rows.length - 1].month === [...n.data].sort(byMonth).pop().month;
+        lineChart(fx, rows, [{ key: 'usd_php', name: 'USD/PHP', color: '#2563EB', fmt: v => '₱' + f2(v) }], d3.format('.0f'), null, null, atLatest && fcr.status === 'ok' ? fcr.data : null);
         lineChart(inf, rows, [
           { key: 'food_inflation_pct', name: 'Food', color: dash.colors[0], fmt: v => f1(v) + '%' },
           { key: 'headline_inflation_pct', name: 'All items', color: 'var(--ui-chart-muted)', fmt: v => f1(v) + '%' }
@@ -552,7 +611,7 @@ dash.calc('above', {
       hint.replaceChildren();
       if (h.status === 'ok') {
         const hr = [...h.data].sort(byMonth).filter(r => inRange(r.month));
-        const latest = [...h.data].sort(byMonth).pop();
+        const latest = hr[hr.length - 1] || [...h.data].sort(byMonth).pop();
         bars(hc, hr, 'survey', 'hunger_pct', v => d3.format('.0f')(v) + '%', 'Families hungry',
           (d, i, all) => st.survey ? d.label === st.survey : i === all.length - 1, label => { st.survey = st.survey === label ? null : label; draw(); });
         const s = st.survey && h.data.find(r => r.survey === st.survey);
@@ -569,7 +628,8 @@ dash.calc('above', {
     if (rg.status === 'ok') {
       const regionRows = rg.data.filter(r => st.island === 'All' || r.island_group === st.island);
       if (st.region && !regionRows.find(r => r.region_key === st.region)) st.region = null;
-      crossFilterCards(rg.data, kpi);
+      crossFilterCards(rg.data, kpi, regionRows);
+      fill('above', kpi ? { n: regionRows.filter(r => +r.rice_inflation_pct > kpi.rice_infl).length, total: regionRows.length } : undefined);
       const hint = document.getElementById('sel-hint'); hint.replaceChildren();
       const sr = regionRows.find(r => r.region_key === st.region);
       if (sr && kpi) {
