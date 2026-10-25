@@ -84,15 +84,15 @@ sheets["sws_hunger"] = pd.DataFrame([
 
 sheets["ncr_min_wage"] = pd.DataFrame([
     ("Wage Order NCR-24", "2023-07-16", 610, "https://nwpc.dole.gov.ph/regionandwages/current-real-minimum-wage-rates/"),
-    ("Wage Order NCR-25", "2024-07-17", 645, "https://nwpc.dole.gov.ph/regionandwages/current-real-minimum-wage-rates/"),
+    ("Wage Order NCR-25", "2024-07-17", 645, "https://www.pna.gov.ph/articles/1227990"),
     ("Wage Order NCR-26", "2025-07-18", 695, "https://www.sunstar.com.ph/manila/ncr-wage-hike-starts-july-25"),
     ("Wage Order NCR-28", "2026-09-26", 755, "https://www.gmanetwork.com/news/money/economy/1003769/dole-p60-wage-hike-in-ncr-takes-effect-sept-26/story/"),
 ], columns=["wage_order", "effective_date", "daily_wage_php", "source"])
 
 sheets["rice_policy_events"] = pd.DataFrame([
-    ("2024-07-01", "Rice import tariff cut from 35% to 15% (EO 62)", "https://www.da.gov.ph/rice-import-ban-lifts-palay-prices-nationwide/"),
-    ("2025-09-01", "Imports of regular and well-milled rice suspended", "https://www.da.gov.ph/rice-import-ban-lifts-palay-prices-nationwide/"),
-    ("2026-01-01", "Price-indexed rice tariff (15-35%) starts; imports resume", "https://www.fas.usda.gov/data/gain/2026/02/philippines-philippines-implements-quarterly-rice-import-tariff-adjustment-based-international"),
+    ("2024-07-05", "Rice import tariff cut from 35% to 15% (EO 62)", "https://portcalls.com/marcos-issues-eo-62-modifying-import-tariffs-including-on-rice"),
+    ("2025-09-01", "Imports of regular and well-milled rice suspended (EO 93)", "https://portcalls.com/ph-rice-import-ban-extended-to-end-2025/"),
+    ("2026-01-01", "Price-indexed rice tariff (15-35%) starts; imports resume (EO 105)", "https://www.fas.usda.gov/data/gain/2026/02/philippines-philippines-implements-quarterly-rice-import-tariff-adjustment-based-international"),
 ], columns=["date", "event", "source"])
 
 # PSA labels regions differently in each table; this lookup lets Power Query join them.
