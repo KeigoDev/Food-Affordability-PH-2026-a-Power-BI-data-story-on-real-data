@@ -84,7 +84,7 @@ if len(fd):
     elif abs(fd["usd_php"].mean() - fx["usd_php"].iloc[-1]) > 0.05: errors.append("fx_daily.csv average disagrees with the provisional month")
 # Forecast tile/chart data: the page must read the fx table
 page = (root / "web-dashboard" / "index.html").read_text()
-if "inputs: ['fx']" not in page: errors.append("dollar forecast is not fed by fx_monthly.csv")
+if "inputs: ['fx', 'fx_daily']" not in page: errors.append("dollar forecast is not fed by fx_monthly.csv")
 
 print(f"Checked {len(measures)} DAX measures, {len(queries)} Power Query queries, {len(sheets)} raw sheets.")
 if errors:

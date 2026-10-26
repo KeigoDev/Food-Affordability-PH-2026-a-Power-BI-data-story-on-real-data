@@ -110,12 +110,12 @@
       <div class="tile t-fx"><div class="lbl">Pesos per US dollar</div><div class="num">₱<span data-source="kpi" data-field="usd">—</span></div><div class="sub">monthly average, <span data-source="kpi" data-field="latest_label">—</span><span id="fx-mtd"></span><span id="fx-spot"></span></div></div>
       <div class="tile t-fx"><div class="lbl">Peso vs a year ago</div><div class="num bad"><span data-source="kpi" data-field="peso_weaker_pct">—</span><span id="peso-word">% weaker</span></div><div class="sub">ECB reference rates</div></div>
       <div class="tile t-bad"><div class="lbl">Headline inflation</div><div class="num bad"><span data-source="kpi" data-field="infl">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="infl_ya">—</span>% · target 2–4%</div></div>
-      <div class="tile t-fx"><div class="lbl">Dollar forecast, <span id="fc-label">—</span></div><div class="num">₱<span id="fc-value" data-source="fx_forecast" data-field="usd_php_forecast">—</span></div><div class="sub">range ₱<span id="fc-low" data-source="fx_forecast" data-field="low">—</span>–<span id="fc-high" data-source="fx_forecast" data-field="high">—</span> · trend projection</div></div>
+      <div class="tile t-fx"><div class="lbl">Dollar forecast, <span id="fc-label">—</span></div><div class="num">₱<span id="fc-value" data-source="fx_forecast" data-field="usd_php_forecast">—</span></div><div class="sub">range ₱<span id="fc-low" data-source="fx_forecast" data-field="low">—</span>–<span id="fc-high" data-source="fx_forecast" data-field="high">—</span> · trend from latest rate</div></div>
       <div class="tile t-muted"><div class="lbl">Purchasing power of ₱1</div><div class="num">₱<span data-source="kpi" data-field="power">—</span></div><div class="sub">2018 = ₱1.00</div></div>
     </div>
     <div class="grid3">
       <div class="card"><h3>GDP growth by quarter</h3><p class="note">Real GDP, % vs same quarter a year earlier · PSA</p><div class="chart" id="gdp-chart" data-source="gdp"></div></div>
-      <div class="card"><h3>Pesos per US dollar</h3><p class="note">Monthly average · higher = stronger dollar · ECB · dashed: current month to date (provisional, ECB daily rates), then trend projection to year end, shaded 95% range</p><div class="chart" id="fx-chart" data-source="nat"></div></div>
+      <div class="card"><h3>Pesos per US dollar</h3><p class="note">Monthly average · higher = stronger dollar · ECB · dashed: current month to date (provisional, ECB daily rates), then 12-month trend projected from the latest daily rate to year end, shaded 95% range</p><div class="chart" id="fx-chart" data-source="nat"></div></div>
       <div class="card"><h3>Inflation: headline vs food</h3><p class="note">% vs a year earlier · shaded: BSP 2–4% target · PSA</p><div class="chart" id="infl-chart" data-source="nat"></div></div>
     </div>
   </section>
@@ -231,10 +231,10 @@ dash.calc('kpi', {
 
 // shortcut: straight-line trend over the last 12 months, not an econometric model; use Power BI's built-in Forecast or ETS/ARIMA for a real forecast.
 dash.calc('fx_forecast', {
-  inputs: ['fx'],
+  inputs: ['fx', 'fx_daily'],
   title: 'USD/PHP trend projection',
-  description: 'Linear trend fitted to the last 12 monthly USD/PHP averages (the newest can be a provisional month-to-date average), projected to December of the latest year, with a 95% range from the fit residuals. Provisional months are returned first as actuals.',
-  fn: (fx) => {
+  description: 'Linear trend fitted to the last 12 monthly USD/PHP averages (the newest can be a provisional month-to-date average), projected to December of the latest year from the latest daily rate (when it falls in the newest month), with a 95% range from the fit residuals. Provisional months are returned first as actuals.',
+  fn: (fx, daily) => {
     const n = [...fx].sort((a, b) => a.month < b.month ? -1 : 1).slice(-12);
     if (n.length < 6) return [];
     const x = n.map((r, i) => i), y = n.map(r => +r.usd_php), k = n.length;
@@ -242,9 +242,13 @@ dash.calc('fx_forecast', {
     const slope = x.reduce((a, xi, i) => a + (xi - mx) * (y[i] - my), 0) / x.reduce((a, xi) => a + (xi - mx) ** 2, 0);
     const sd = Math.sqrt(y.reduce((a, yi, i) => a + (yi - (my + slope * (x[i] - mx))) ** 2, 0) / (k - 2));
     const last = n[k - 1].month, yr = Number(last.slice(0, 4));
+    // Start from the latest daily rate so the projection doesn't lag a fast move; fall back to the trend line.
+    // shortcut: counts whole months from the daily rate's month, ignoring the day of month; fine for a 1-2 month horizon.
+    const spot = [...(daily || [])].sort((a, b) => a.date < b.date ? -1 : 1).pop();
+    const start = spot && spot.date.slice(0, 7) === last.slice(0, 7) ? +spot.usd_php : my + slope * (k - 1 - mx);
     const out = n.filter(r => +r.provisional).map(r => ({ month: r.month, usd_php_forecast: +r.usd_php, low: +r.usd_php, high: +r.usd_php, provisional: 1 }));
     for (let m = Number(last.slice(5, 7)) + 1, h = 1; m <= 12; m++, h++) {
-      const f = my + slope * (k - 1 + h - mx);
+      const f = start + slope * h;
       out.push({ month: `${yr}-${String(m).padStart(2, '0')}-01`, usd_php_forecast: Math.round(f * 100) / 100,
                  low: Math.round((f - 1.96 * sd) * 100) / 100, high: Math.round((f + 1.96 * sd) * 100) / 100 });
     }
