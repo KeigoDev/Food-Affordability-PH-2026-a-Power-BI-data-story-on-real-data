@@ -107,7 +107,7 @@
     <p class="story">Real GDP growth fell from <b data-source="kpi" data-field="gdp_ya">—</b>% to <b data-source="kpi" data-field="gdp">—</b>% in a year. A weaker peso makes imported rice and fuel cost more, and ₱1 from 2018 now buys ₱<b data-source="kpi" data-field="power">—</b> worth of goods. Use the date slicer to zoom the charts.</p>
     <div class="tiles">
       <div class="tile t-muted"><div class="lbl">GDP growth, <span data-source="kpi" data-field="gdp_q">—</span></div><div class="num"><span data-source="kpi" data-field="gdp">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="gdp_ya">—</span>% a year earlier</div></div>
-      <div class="tile t-fx"><div class="lbl">Pesos per US dollar</div><div class="num">₱<span data-source="kpi" data-field="usd">—</span></div><div class="sub">monthly average, <span data-source="kpi" data-field="latest_label">—</span><span id="fx-mtd"></span></div></div>
+      <div class="tile t-fx"><div class="lbl">Pesos per US dollar</div><div class="num">₱<span data-source="kpi" data-field="usd">—</span></div><div class="sub">monthly average, <span data-source="kpi" data-field="latest_label">—</span><span id="fx-mtd"></span><span id="fx-spot"></span></div></div>
       <div class="tile t-fx"><div class="lbl">Peso vs a year ago</div><div class="num bad"><span data-source="kpi" data-field="peso_weaker_pct">—</span><span id="peso-word">% weaker</span></div><div class="sub">ECB reference rates</div></div>
       <div class="tile t-bad"><div class="lbl">Headline inflation</div><div class="num bad"><span data-source="kpi" data-field="infl">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="infl_ya">—</span>% · target 2–4%</div></div>
       <div class="tile t-fx"><div class="lbl">Dollar forecast, <span id="fc-label">—</span></div><div class="num">₱<span id="fc-value" data-source="fx_forecast" data-field="usd_php_forecast">—</span></div><div class="sub">range ₱<span id="fc-low" data-source="fx_forecast" data-field="low">—</span>–<span id="fc-high" data-source="fx_forecast" data-field="high">—</span> · trend projection</div></div>
@@ -573,6 +573,8 @@ dash.calc('above', {
     document.getElementById('fc-low').textContent = fe ? f2(fe.low) : '—';
     document.getElementById('fc-high').textContent = fe ? f2(fe.high) : '—';
     const mtd = fcd.status === 'ok' ? fcd.data.find(r => r.provisional) : null, toLatest = n.status === 'ok' && st.to === [...n.data].sort(byMonth).pop().month;
+    const fd = dash.data('fx_daily'), spot = fd.status === 'ok' && fd.data.length ? fd.data[fd.data.length - 1] : null;
+    document.getElementById('fx-spot').textContent = spot && toLatest ? ` · latest daily ₱${f2(+spot.usd_php)} (${d3.utcFormat('%-d %b')(parse(spot.date))})` : '';
     document.getElementById('fx-mtd').textContent = mtd && toLatest ? ` · ${fmtMonth(parse(mtd.month))} to date ₱${f2(mtd.usd_php_forecast)}` : '';
     qbox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
 

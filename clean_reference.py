@@ -47,6 +47,11 @@ fx = fx.pivot(index="TIME_PERIOD", columns="CURRENCY", values="v").dropna()
 fx = pd.DataFrame({"month": pd.to_datetime(fx.index + "-01"), "usd_php": (fx["PHP"] / fx["USD"]).round(2).values,
                    "provisional": [p in provisional for p in fx.index]})
 
+fd = raw["ecb_fx_daily"].copy()
+fd["v"] = num(fd["OBS_VALUE"])
+fd = fd.pivot(index="TIME_PERIOD", columns="CURRENCY", values="v").dropna()
+fx_daily = pd.DataFrame({"date": fd.index, "usd_php": (fd["PHP"] / fd["USD"]).round(2).values})
+
 hunger = raw["sws_hunger"].copy()
 hunger["hunger_pct"] = num(hunger["hunger_pct"])
 hunger["month"] = pd.to_datetime(hunger["fieldwork_start"]).dt.to_period("M").dt.to_timestamp()
@@ -103,6 +108,9 @@ assert set(nat["month"]) <= set(fx_out["month"])
 
 nat.to_csv(out / "national_monthly.csv", index=False)
 fx_out.to_csv(out / "fx_monthly.csv", index=False)
+assert fx_daily["usd_php"].between(40, 90).all()
+fx_daily.to_csv(out / "fx_daily.csv", index=False)
+if len(fx_daily): print("FX latest daily", *fx_daily.iloc[-1])
 if fx_note: print("FX", fx_out["month"].iloc[-1], fx_out["usd_php"].iloc[-1], "-", fx_note[0])
 regions.to_csv(out / "regions_latest.csv", index=False)
 gdp.to_csv(out / "gdp_quarterly.csv", index=False)

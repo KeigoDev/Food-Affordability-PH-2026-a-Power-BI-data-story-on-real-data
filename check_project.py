@@ -76,6 +76,12 @@ if fx["provisional"].iloc[:-1].any(): errors.append("a provisional FX month is n
 if not fx["usd_php"].between(40, 90).all() or fx["usd_php"].diff().abs().max() > 3: errors.append("fx_monthly.csv has an implausible value or jump")
 raw_fx = pd.read_excel(root / "raw" / "ph_food_economy_raw.xlsx", sheet_name="ecb_fx", dtype=str)
 if raw_fx["TITLE"].str.startswith("PROVISIONAL").sum() != 2 * fx["provisional"].sum(): errors.append("provisional FX rows in raw Excel don't match fx_monthly.csv")
+# Daily rates: same month as the provisional one, and their average matches it
+fd = pd.read_csv(root / "data" / "fx_daily.csv")
+if len(fd):
+    pm = fx.loc[fx["provisional"] == 1, "month"]
+    if pm.empty or not fd["date"].str[:7].eq(pm.iloc[0][:7]).all(): errors.append("fx_daily.csv is not the provisional month")
+    elif abs(fd["usd_php"].mean() - fx["usd_php"].iloc[-1]) > 0.05: errors.append("fx_daily.csv average disagrees with the provisional month")
 # Forecast tile/chart data: the page must read the fx table
 page = (root / "web-dashboard" / "index.html").read_text()
 if "inputs: ['fx']" not in page: errors.append("dollar forecast is not fed by fx_monthly.csv")

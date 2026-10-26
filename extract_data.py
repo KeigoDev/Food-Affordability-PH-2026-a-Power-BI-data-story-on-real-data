@@ -74,6 +74,7 @@ fx_m = pd.read_csv(io.BytesIO(ecb), dtype=str)[fx_cols]
 # The ECB publishes a month's average only after it ends, so add the current month from daily rates (provisional).
 next_month = (pd.Period(fx_m["TIME_PERIOD"].max(), "M") + 1).strftime("%Y-%m")
 daily = pd.read_csv(io.BytesIO(http(f"https://data-api.ecb.europa.eu/service/data/EXR/D.PHP+USD.EUR.SP00.A?startPeriod={next_month}-01&format=csvdata")), dtype=str)
+sheets["ecb_fx_daily"] = daily[fx_cols].copy()  # raw daily rates for the current month: gives the latest rate
 if len(daily):
     last_day = daily["TIME_PERIOD"].max()
     daily["TIME_PERIOD"] = daily["TIME_PERIOD"].str[:7]
@@ -146,6 +147,7 @@ sheets["about"] = pd.DataFrame({
               "Raw, uncleaned. '.' means not yet released. Clean in Power Query (see power_query.m)."]})
 
 for name, df in sheets.items():
+    if name == "ecb_fx_daily": continue  # empty on the first days of a month, before the ECB publishes
     assert len(df) > 0, f"{name} is empty"
 OUT.parent.mkdir(exist_ok=True)
 with pd.ExcelWriter(OUT) as xl:
