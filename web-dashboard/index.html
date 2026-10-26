@@ -107,7 +107,7 @@
     <p class="story">Real GDP growth fell from <b data-source="kpi" data-field="gdp_ya">—</b>% to <b data-source="kpi" data-field="gdp">—</b>% in a year. A weaker peso makes imported rice and fuel cost more, and ₱1 from 2018 now buys ₱<b data-source="kpi" data-field="power">—</b> worth of goods. Use the date slicer to zoom the charts.</p>
     <div class="tiles">
       <div class="tile t-muted"><div class="lbl">GDP growth, <span data-source="kpi" data-field="gdp_q">—</span></div><div class="num"><span data-source="kpi" data-field="gdp">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="gdp_ya">—</span>% a year earlier</div></div>
-      <div class="tile t-fx"><div class="lbl">Pesos per US dollar</div><div class="num">₱<span data-source="kpi" data-field="usd">—</span></div><div class="sub">monthly average, <span data-source="kpi" data-field="latest_label">—</span></div></div>
+      <div class="tile t-fx"><div class="lbl">Pesos per US dollar</div><div class="num">₱<span data-source="kpi" data-field="usd">—</span></div><div class="sub">monthly average, <span data-source="kpi" data-field="latest_label">—</span><span id="fx-mtd"></span></div></div>
       <div class="tile t-fx"><div class="lbl">Peso vs a year ago</div><div class="num bad"><span data-source="kpi" data-field="peso_weaker_pct">—</span><span id="peso-word">% weaker</span></div><div class="sub">ECB reference rates</div></div>
       <div class="tile t-bad"><div class="lbl">Headline inflation</div><div class="num bad"><span data-source="kpi" data-field="infl">—</span>%</div><div class="sub">was <span data-source="kpi" data-field="infl_ya">—</span>% · target 2–4%</div></div>
       <div class="tile t-fx"><div class="lbl">Dollar forecast, <span id="fc-label">—</span></div><div class="num">₱<span id="fc-value" data-source="fx_forecast" data-field="usd_php_forecast">—</span></div><div class="sub">range ₱<span id="fc-low" data-source="fx_forecast" data-field="low">—</span>–<span id="fc-high" data-source="fx_forecast" data-field="high">—</span> · trend projection</div></div>
@@ -115,7 +115,7 @@
     </div>
     <div class="grid3">
       <div class="card"><h3>GDP growth by quarter</h3><p class="note">Real GDP, % vs same quarter a year earlier · PSA</p><div class="chart" id="gdp-chart" data-source="gdp"></div></div>
-      <div class="card"><h3>Pesos per US dollar</h3><p class="note">Monthly average · higher = stronger dollar · ECB · dashed: trend projection to year end, shaded 95% range</p><div class="chart" id="fx-chart" data-source="nat"></div></div>
+      <div class="card"><h3>Pesos per US dollar</h3><p class="note">Monthly average · higher = stronger dollar · ECB · dashed: current month to date (provisional, ECB daily rates), then trend projection to year end, shaded 95% range</p><div class="chart" id="fx-chart" data-source="nat"></div></div>
       <div class="card"><h3>Inflation: headline vs food</h3><p class="note">% vs a year earlier · shaded: BSP 2–4% target · PSA</p><div class="chart" id="infl-chart" data-source="nat"></div></div>
     </div>
   </section>
@@ -231,17 +231,18 @@ dash.calc('kpi', {
 
 // shortcut: straight-line trend over the last 12 months, not an econometric model; use Power BI's built-in Forecast or ETS/ARIMA for a real forecast.
 dash.calc('fx_forecast', {
-  inputs: ['nat'],
+  inputs: ['fx'],
   title: 'USD/PHP trend projection',
-  description: 'Linear trend fitted to the last 12 monthly USD/PHP averages, projected to December of the latest year, with a 95% range from the fit residuals.',
-  fn: (nat) => {
-    const n = [...nat].sort((a, b) => a.month < b.month ? -1 : 1).slice(-12);
+  description: 'Linear trend fitted to the last 12 monthly USD/PHP averages (the newest can be a provisional month-to-date average), projected to December of the latest year, with a 95% range from the fit residuals. Provisional months are returned first as actuals.',
+  fn: (fx) => {
+    const n = [...fx].sort((a, b) => a.month < b.month ? -1 : 1).slice(-12);
     if (n.length < 6) return [];
     const x = n.map((r, i) => i), y = n.map(r => +r.usd_php), k = n.length;
     const mx = x.reduce((a, b) => a + b) / k, my = y.reduce((a, b) => a + b) / k;
     const slope = x.reduce((a, xi, i) => a + (xi - mx) * (y[i] - my), 0) / x.reduce((a, xi) => a + (xi - mx) ** 2, 0);
     const sd = Math.sqrt(y.reduce((a, yi, i) => a + (yi - (my + slope * (x[i] - mx))) ** 2, 0) / (k - 2));
-    const last = n[k - 1].month, yr = Number(last.slice(0, 4)), out = [];
+    const last = n[k - 1].month, yr = Number(last.slice(0, 4));
+    const out = n.filter(r => +r.provisional).map(r => ({ month: r.month, usd_php_forecast: +r.usd_php, low: +r.usd_php, high: +r.usd_php, provisional: 1 }));
     for (let m = Number(last.slice(5, 7)) + 1, h = 1; m <= 12; m++, h++) {
       const f = my + slope * (k - 1 + h - mx);
       out.push({ month: `${yr}-${String(m).padStart(2, '0')}-01`, usd_php_forecast: Math.round(f * 100) / 100,
@@ -571,6 +572,8 @@ dash.calc('above', {
     document.getElementById('fc-value').textContent = fe ? f2(fe.usd_php_forecast) : '—';
     document.getElementById('fc-low').textContent = fe ? f2(fe.low) : '—';
     document.getElementById('fc-high').textContent = fe ? f2(fe.high) : '—';
+    const mtd = fcd.status === 'ok' ? fcd.data.find(r => r.provisional) : null, toLatest = n.status === 'ok' && st.to === [...n.data].sort(byMonth).pop().month;
+    document.getElementById('fx-mtd').textContent = mtd && toLatest ? ` · ${fmtMonth(parse(mtd.month))} to date ₱${f2(mtd.usd_php_forecast)}` : '';
     qbox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
 
     if (st.page === 'economy') {

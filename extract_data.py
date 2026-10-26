@@ -69,7 +69,20 @@ sheets["psa_gdp_growth"] = psa_table("2B/NA/QT/1SUM/0022B5BEXQ2.px", {
 
 print("ECB exchange rates ...")
 ecb = http("https://data-api.ecb.europa.eu/service/data/EXR/M.PHP+USD.EUR.SP00.A?startPeriod=2024-01&format=csvdata")
-sheets["ecb_fx"] = pd.read_csv(io.BytesIO(ecb), dtype=str)[["CURRENCY", "CURRENCY_DENOM", "TIME_PERIOD", "OBS_VALUE", "TITLE"]]
+fx_cols = ["CURRENCY", "CURRENCY_DENOM", "TIME_PERIOD", "OBS_VALUE", "TITLE"]
+fx_m = pd.read_csv(io.BytesIO(ecb), dtype=str)[fx_cols]
+# The ECB publishes a month's average only after it ends, so add the current month from daily rates (provisional).
+next_month = (pd.Period(fx_m["TIME_PERIOD"].max(), "M") + 1).strftime("%Y-%m")
+daily = pd.read_csv(io.BytesIO(http(f"https://data-api.ecb.europa.eu/service/data/EXR/D.PHP+USD.EUR.SP00.A?startPeriod={next_month}-01&format=csvdata")), dtype=str)
+if len(daily):
+    last_day = daily["TIME_PERIOD"].max()
+    daily["TIME_PERIOD"] = daily["TIME_PERIOD"].str[:7]
+    daily["OBS_VALUE"] = pd.to_numeric(daily["OBS_VALUE"])
+    mtd = daily.groupby(["CURRENCY", "CURRENCY_DENOM", "TIME_PERIOD"], as_index=False)["OBS_VALUE"].mean()
+    mtd["OBS_VALUE"] = mtd["OBS_VALUE"].round(4).astype(str)
+    mtd["TITLE"] = f"PROVISIONAL: average of ECB daily reference rates to {last_day}"
+    fx_m = pd.concat([fx_m, mtd[fx_cols]], ignore_index=True)
+sheets["ecb_fx"] = fx_m
 
 # No API for these: values typed from the published releases linked in `source`.
 sheets["sws_hunger"] = pd.DataFrame([

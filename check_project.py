@@ -61,13 +61,24 @@ for name, body in measures.items():
 assert len(measures) >= 40, f"only parsed {len(measures)} measures - parser broken?"
 
 # 3) clean data (from clean_reference.py): complete and plausible
-for f in ("national_monthly.csv", "regions_latest.csv", "gdp_quarterly.csv", "hunger_sws.csv", "rice_policy_events.csv"):
+for f in ("national_monthly.csv", "fx_monthly.csv", "regions_latest.csv", "gdp_quarterly.csv", "hunger_sws.csv", "rice_policy_events.csv"):
     d = pd.read_csv(root / "data" / f)
     if d.isna().any().any(): errors.append(f"data/{f} has blanks")
 nat = pd.read_csv(root / "data" / "national_monthly.csv")
 if not nat["usd_php"].between(40, 90).all(): errors.append("usd_php out of range")
 if not nat["headline_inflation_pct"].between(-10, 30).all(): errors.append("inflation out of range")
 if nat["month"].duplicated().any(): errors.append("duplicate months in national_monthly.csv")
+# FX: monthly series and the provisional month agree with the national table and the raw ECB rows
+fx = pd.read_csv(root / "data" / "fx_monthly.csv")
+both = nat.merge(fx, on="month", suffixes=("", "_fx"))
+if len(both) != len(nat) or (both["usd_php"] - both["usd_php_fx"]).abs().max() > 0.005: errors.append("fx_monthly.csv disagrees with national_monthly.csv")
+if fx["provisional"].iloc[:-1].any(): errors.append("a provisional FX month is not the newest")
+if not fx["usd_php"].between(40, 90).all() or fx["usd_php"].diff().abs().max() > 3: errors.append("fx_monthly.csv has an implausible value or jump")
+raw_fx = pd.read_excel(root / "raw" / "ph_food_economy_raw.xlsx", sheet_name="ecb_fx", dtype=str)
+if raw_fx["TITLE"].str.startswith("PROVISIONAL").sum() != 2 * fx["provisional"].sum(): errors.append("provisional FX rows in raw Excel don't match fx_monthly.csv")
+# Forecast tile/chart data: the page must read the fx table
+page = (root / "web-dashboard" / "index.html").read_text()
+if "inputs: ['fx']" not in page: errors.append("dollar forecast is not fed by fx_monthly.csv")
 
 print(f"Checked {len(measures)} DAX measures, {len(queries)} Power Query queries, {len(sheets)} raw sheets.")
 if errors:

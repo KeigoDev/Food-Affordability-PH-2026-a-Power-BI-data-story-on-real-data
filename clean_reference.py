@@ -41,8 +41,11 @@ g["quarter_start"] = pd.to_datetime(dict(year=g["year"], month=(g["qtr"] - 1) * 
 
 fx = raw["ecb_fx"].copy()
 fx["v"] = num(fx["OBS_VALUE"])
+provisional = set(fx.loc[fx["TITLE"].str.startswith("PROVISIONAL"), "TIME_PERIOD"])
+fx_note = fx.loc[fx["TITLE"].str.startswith("PROVISIONAL"), "TITLE"].head(1).tolist()
 fx = fx.pivot(index="TIME_PERIOD", columns="CURRENCY", values="v").dropna()
-fx = pd.DataFrame({"month": pd.to_datetime(fx.index + "-01"), "usd_php": (fx["PHP"] / fx["USD"]).round(2).values})
+fx = pd.DataFrame({"month": pd.to_datetime(fx.index + "-01"), "usd_php": (fx["PHP"] / fx["USD"]).round(2).values,
+                   "provisional": [p in provisional for p in fx.index]})
 
 hunger = raw["sws_hunger"].copy()
 hunger["hunger_pct"] = num(hunger["hunger_pct"])
@@ -92,7 +95,15 @@ assert regions.notna().all().all() and len(regions) == 18, regions[regions.isna(
 assert nat["usd_php"].between(40, 90).all() and nat["rice_price_php_kg"].between(20, 100).all()
 assert gdp["gdp_growth_pct"].between(-20, 20).all() and len(gdp) >= 12
 
+# FX alone runs ahead of PSA: it can include the current month (provisional, from ECB daily rates).
+fx_out = fx.sort_values("month").assign(month=lambda d: ym(d["month"]), provisional=lambda d: d["provisional"].astype(int))
+assert fx_out["usd_php"].between(40, 90).all() and not fx_out["month"].duplicated().any()
+assert fx_out["provisional"].iloc[:-1].eq(0).all(), "only the newest FX month may be provisional"
+assert set(nat["month"]) <= set(fx_out["month"])
+
 nat.to_csv(out / "national_monthly.csv", index=False)
+fx_out.to_csv(out / "fx_monthly.csv", index=False)
+if fx_note: print("FX", fx_out["month"].iloc[-1], fx_out["usd_php"].iloc[-1], "-", fx_note[0])
 regions.to_csv(out / "regions_latest.csv", index=False)
 gdp.to_csv(out / "gdp_quarterly.csv", index=False)
 hunger_out.to_csv(out / "hunger_sws.csv", index=False)
