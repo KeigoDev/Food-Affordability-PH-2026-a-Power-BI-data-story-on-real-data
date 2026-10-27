@@ -7,7 +7,7 @@ import base64, io, json, pathlib, zipfile
 ROOT = pathlib.Path(__file__).parent
 page = (ROOT / "web-dashboard" / "index.html").read_text(encoding="utf-8")
 datasets = {"nat": "national_monthly.csv", "regions": "regions_latest.csv", "gdp": "gdp_quarterly.csv",
-            "hunger": "hunger_sws.csv", "events": "rice_policy_events.csv", "fx": "fx_monthly.csv", "fx_daily": "fx_daily.csv"}
+            "hunger": "hunger_sws.csv", "events": "rice_policy_events.csv", "fx": "fx_monthly.csv", "fx_daily": "fx_daily.csv", "bsp": "bsp_outlook.csv"}
 csv = {k: (ROOT / "data" / f).read_text(encoding="utf-8") for k, f in datasets.items()}
 assert all(len(v.splitlines()) > 1 for k, v in csv.items() if k != "fx_daily"), "a data file is empty - run clean_reference.py"
 

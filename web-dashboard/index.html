@@ -116,7 +116,7 @@
     <div class="grid3">
       <div class="card"><h3>GDP growth by quarter</h3><p class="note">Real GDP, % vs same quarter a year earlier · PSA</p><div class="chart" id="gdp-chart" data-source="gdp"></div></div>
       <div class="card"><h3>Pesos per US dollar</h3><p class="note">Monthly average · higher = stronger dollar · ECB · dashed: current month to date (provisional, ECB daily rates), then 12-month trend projected from the latest daily rate to year end, shaded 95% range</p><div class="chart" id="fx-chart" data-source="nat"></div></div>
-      <div class="card"><h3>Inflation: headline vs food</h3><p class="note">% vs a year earlier · shaded: BSP 2–4% target · PSA</p><div class="chart" id="infl-chart" data-source="nat"></div></div>
+      <div class="card"><h3>Inflation: headline vs food</h3><p class="note">% vs a year earlier · shaded: BSP 2–4% target · PSA<span id="bsp-note"></span></p><div class="chart" id="infl-chart" data-source="nat"></div></div>
     </div>
   </section>
 
@@ -580,6 +580,8 @@ dash.calc('above', {
     const fd = dash.data('fx_daily'), spot = fd.status === 'ok' && fd.data.length ? fd.data[fd.data.length - 1] : null;
     document.getElementById('fx-spot').textContent = spot && toLatest ? ` · latest daily ₱${f2(+spot.usd_php)} (${d3.utcFormat('%-d %b')(parse(spot.date))})` : '';
     document.getElementById('fx-mtd').textContent = mtd && toLatest ? ` · ${fmtMonth(parse(mtd.month))} to date ₱${f2(mtd.usd_php_forecast)}` : '';
+    const bs = dash.data('bsp'), bv = k => bs.status === 'ok' ? (bs.data.find(r => r.item === k) || {}).value : null;
+    document.getElementById('bsp-note').textContent = bv('inflation_forecast_2026_pct') ? ` · BSP forecast: ${f1(+bv('inflation_forecast_2026_pct'))}% for 2026, ${f1(+bv('inflation_forecast_2027_pct'))}% for 2027 · policy rate ${f1(+bv('policy_rate_pct'))}% (${d3.utcFormat('%-d %b %Y')(parse(bs.data[0].date))})` : '';
     qbox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
 
     if (st.page === 'economy') {

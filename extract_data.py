@@ -109,6 +109,13 @@ sheets["rice_policy_events"] = pd.DataFrame([
     ("2026-01-01", "Price-indexed rice tariff (15-35%) starts; imports resume (EO 105)", "https://www.fas.usda.gov/data/gain/2026/02/philippines-philippines-implements-quarterly-rice-import-tariff-adjustment-based-international"),
 ], columns=["date", "event", "source"])
 
+# BSP outlook (Monetary Board decision): forecasts and policy rate, not measured inflation.
+sheets["bsp_outlook"] = pd.DataFrame([
+    ("2026-10-22", "policy_rate_pct", 5.5, "https://www.manilatimes.net/2026/10/27/business/top-business/inflation-threatens-prolonged-tightening/2454325"),
+    ("2026-10-22", "inflation_forecast_2026_pct", 6.1, "https://www.manilatimes.net/2026/10/27/business/top-business/inflation-threatens-prolonged-tightening/2454325"),
+    ("2026-10-22", "inflation_forecast_2027_pct", 6.0, "https://www.manilatimes.net/2026/10/27/business/top-business/inflation-threatens-prolonged-tightening/2454325"),
+], columns=["date", "item", "value", "source"])
+
 # PSA labels regions differently in each table; this lookup lets Power Query join them.
 sheets["region_lookup"] = pd.DataFrame([
     ("PH", "Philippines", "National", "Philippines", "PHILIPPINES"),

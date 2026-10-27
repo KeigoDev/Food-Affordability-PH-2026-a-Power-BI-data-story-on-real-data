@@ -61,7 +61,7 @@ for name, body in measures.items():
 assert len(measures) >= 40, f"only parsed {len(measures)} measures - parser broken?"
 
 # 3) clean data (from clean_reference.py): complete and plausible
-for f in ("national_monthly.csv", "fx_monthly.csv", "regions_latest.csv", "gdp_quarterly.csv", "hunger_sws.csv", "rice_policy_events.csv"):
+for f in ("national_monthly.csv", "fx_monthly.csv", "regions_latest.csv", "gdp_quarterly.csv", "hunger_sws.csv", "rice_policy_events.csv", "bsp_outlook.csv"):
     d = pd.read_csv(root / "data" / f)
     if d.isna().any().any(): errors.append(f"data/{f} has blanks")
 nat = pd.read_csv(root / "data" / "national_monthly.csv")
@@ -82,6 +82,9 @@ if len(fd):
     pm = fx.loc[fx["provisional"] == 1, "month"]
     if pm.empty or not fd["date"].str[:7].eq(pm.iloc[0][:7]).all(): errors.append("fx_daily.csv is not the provisional month")
     elif abs(fd["usd_php"].mean() - fx["usd_php"].iloc[-1]) > 0.05: errors.append("fx_daily.csv average disagrees with the provisional month")
+# BSP outlook: typed in, so every row needs a source link
+bo = pd.read_excel(root / "raw" / "ph_food_economy_raw.xlsx", sheet_name="bsp_outlook", dtype=str)
+if not bo["source"].str.startswith("https://").all(): errors.append("bsp_outlook row without a source link")
 # Forecast tile/chart data: the page must read the fx table
 page = (root / "web-dashboard" / "index.html").read_text()
 if "inputs: ['fx', 'fx_daily']" not in page: errors.append("dollar forecast is not fed by fx_monthly.csv")

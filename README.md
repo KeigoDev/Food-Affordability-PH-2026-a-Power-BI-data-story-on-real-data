@@ -11,6 +11,7 @@ In 2026, the Philippine economy is slowing while prices climb again, and rice, t
 | Rice inflation | **+20.3%** | −16.9% | PSA CPI |
 | Rice retail price, regular-milled | **₱50.10/kg** | ₱40.23/kg (+24.5%) | PSA |
 | US dollar | **₱62.62** Sep average (Oct 2026 average so far: ₱63.02; latest daily rate ₱63.94 on 26 Oct, a record low for the peso) | ₱57.29 (peso 9.3% weaker) | ECB, BAP |
+| BSP outlook (22 Oct 2026) | policy rate raised 0.5 pt to **5.5%**; inflation forecast **6.1%** for 2026, **6.0%** for 2027 | — | [BSP via Manila Times](https://www.manilatimes.net/2026/10/27/business/top-business/inflation-threatens-prolonged-tightening/2454325) |
 | GDP growth | **2.3%** (Q2 2026) | 5.4% (Q2 2025) | PSA |
 | Purchasing power of ₱1 (2018 = 1.00) | **₱0.73** | ₱0.78 | PSA |
 | Families experiencing hunger | **22.6%** (Sep 2026) | 22.0% (Sep 2025) | SWS |

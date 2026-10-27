@@ -59,6 +59,7 @@ wage = raw["ncr_min_wage"].copy()
 wage["effective_date"] = pd.to_datetime(wage["effective_date"])
 wage["daily_wage_php"] = num(wage["daily_wage_php"])
 events = raw["rice_policy_events"]
+bsp = raw["bsp_outlook"][["date", "item", "value"]].assign(value=lambda d: num(d["value"]))
 
 # ---- web dashboard tables (flattened) ----
 ym = lambda s: s.dt.strftime("%Y-%m-%d")
@@ -116,4 +117,6 @@ regions.to_csv(out / "regions_latest.csv", index=False)
 gdp.to_csv(out / "gdp_quarterly.csv", index=False)
 hunger_out.to_csv(out / "hunger_sws.csv", index=False)
 events.to_csv(out / "rice_policy_events.csv", index=False)
+assert bsp["value"].between(0, 20).all() and bsp["item"].is_unique
+bsp.to_csv(out / "bsp_outlook.csv", index=False)
 print("latest month:", latest.date(), "| rows:", len(nat), len(regions), len(gdp), len(hunger_out), len(events))
