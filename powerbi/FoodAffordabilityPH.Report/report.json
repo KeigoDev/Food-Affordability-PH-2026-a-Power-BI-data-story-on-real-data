@@ -16,9 +16,18 @@
           "x": 20,
           "y": 10,
           "z": 0,
-          "width": 1240,
+          "width": 880,
           "height": 60,
-          "config": "{\"name\": \"8666fdea48475509a7bc\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 1240, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Growth is slowing, the dollar is strong, and inflation is back\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "config": "{\"name\": \"8666fdea48475509a7bc\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 880, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Growth is slowing, the dollar is strong, and inflation is back\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 920,
+          "y": 10,
+          "z": 0,
+          "width": 340,
+          "height": 60,
+          "config": "{\"name\": \"758ce9a8099e5a25be65\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 920, \"y\": 10, \"z\": 0, \"width\": 340, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Calendar.Month Start\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendar\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Month Start\"}, \"Name\": \"Calendar.Month Start\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Date range'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -109,9 +118,18 @@
           "x": 20,
           "y": 10,
           "z": 0,
-          "width": 1240,
+          "width": 880,
           "height": 60,
-          "config": "{\"name\": \"bb9a9e81a6dc5639ad9d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 1240, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Import policy swung rice prices down, then sharply up\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "config": "{\"name\": \"bb9a9e81a6dc5639ad9d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 880, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Import policy swung rice prices down, then sharply up\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 920,
+          "y": 10,
+          "z": 0,
+          "width": 340,
+          "height": 60,
+          "config": "{\"name\": \"758ce9a8099e5a25be65\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 920, \"y\": 10, \"z\": 0, \"width\": 340, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Calendar.Month Start\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendar\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Month Start\"}, \"Name\": \"Calendar.Month Start\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Date range'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -202,9 +220,18 @@
           "x": 20,
           "y": 10,
           "z": 0,
-          "width": 1240,
+          "width": 880,
           "height": 60,
-          "config": "{\"name\": \"ad424cbc891a5244bd08\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 1240, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Hunger stays stubbornly high\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "config": "{\"name\": \"ad424cbc891a5244bd08\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 10, \"z\": 0, \"width\": 880, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"textbox\", \"drillFilterOtherVisuals\": true, \"objects\": {\"general\": [{\"properties\": {\"paragraphs\": [{\"textRuns\": [{\"value\": \"Hunger stays stubbornly high\", \"textStyle\": {\"fontSize\": \"20pt\", \"fontWeight\": \"bold\"}}]}]}}]}}}",
+          "filters": "[]"
+        },
+        {
+          "x": 920,
+          "y": 10,
+          "z": 0,
+          "width": 340,
+          "height": 60,
+          "config": "{\"name\": \"758ce9a8099e5a25be65\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 920, \"y\": 10, \"z\": 0, \"width\": 340, \"height\": 60}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Calendar.Month Start\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendar\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Month Start\"}, \"Name\": \"Calendar.Month Start\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Date range'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -222,7 +249,7 @@
           "z": 0,
           "width": 240,
           "height": 110,
-          "config": "{\"name\": \"385614d83b7957839b18\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 270, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Hunger Rate (Low)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Hunger Rate (Low)\"}, \"Name\": \"_Measures.Hunger Rate (Low)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Lowest since Mar 2025 (%)'\"}}}}}]}}}",
+          "config": "{\"name\": \"beedbe5c8741574e851e\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 270, \"y\": 80, \"z\": 0, \"width\": 240, \"height\": 110}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"_Measures.Hunger Rate (Low)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"_Measures\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Hunger Rate (Low)\"}, \"Name\": \"_Measures.Hunger Rate (Low)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}, \"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Lowest in the selected range (%)'\"}}}}}]}}}",
           "filters": "[]"
         },
         {

@@ -591,7 +591,7 @@
           {
             "name": "Latest Month",
             "expression": [
-              "CALCULATE ( MAX ( Inflation[month] ), REMOVEFILTERS () )"
+              "CALCULATE ( MAX ( Inflation[month] ), REMOVEFILTERS ( Region ) )"
             ],
             "formatString": "mmm yyyy"
           },
@@ -637,7 +637,7 @@
             "name": "Rice Price (Low)",
             "expression": [
               "VAR k = [Selected Region Key]",
-              "RETURN CALCULATE ( MIN ( RicePrice[price_php_kg] ), REMOVEFILTERS ( 'Calendar' ), Region[region_key] = k )"
+              "RETURN CALCULATE ( MIN ( RicePrice[price_php_kg] ), Region[region_key] = k )"
             ],
             "formatString": "0.00"
           },
@@ -804,7 +804,8 @@
           {
             "name": "Latest GDP Quarter",
             "expression": [
-              "CALCULATE ( MAX ( GDP[quarter_start] ), REMOVEFILTERS () )"
+              "VAR m = [Latest Month]",
+              "RETURN CALCULATE ( MAX ( GDP[quarter_start] ), REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] <= m )"
             ],
             "formatString": "mmm yyyy"
           },
@@ -848,15 +849,15 @@
           {
             "name": "Hunger Rate (Latest)",
             "expression": [
-              "VAR s = CALCULATE ( MAX ( Hunger[month] ), REMOVEFILTERS () )",
-              "RETURN CALCULATE ( [Hunger Rate], REMOVEFILTERS (), Hunger[month] = s )"
+              "VAR s = MAX ( Hunger[month] )",
+              "RETURN CALCULATE ( [Hunger Rate], Hunger[month] = s )"
             ],
             "formatString": "0.0"
           },
           {
             "name": "Hunger Rate (Low)",
             "expression": [
-              "CALCULATE ( MIN ( Hunger[hunger_pct] ), REMOVEFILTERS () )"
+              "MIN ( Hunger[hunger_pct] )"
             ],
             "formatString": "0.0"
           },
@@ -894,11 +895,8 @@
           {
             "name": "Kg Rice per NCR Wage (Peak)",
             "expression": [
-              "VAR lastM = [Latest Month]",
-              "VAR months = CALCULATETABLE ( VALUES ( 'Calendar'[Month Start] ), REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] <= lastM )",
-              "RETURN",
-              "    MAXX (",
-              "        months,",
+              "MAXX (",
+              "        VALUES ( 'Calendar'[Month Start] ),",
               "        VAR ms = 'Calendar'[Month Start]",
               "        RETURN CALCULATE ( [Kg Rice per NCR Wage], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Month Start] = ms )",
               "    )"

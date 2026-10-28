@@ -2,6 +2,7 @@
 // Tables come from power_query.m (stage 2). Relationships are in README stage 3.
 // Paste each measure via Modeling > New measure (home table: _Measures).
 // With no region selected, measures show the Philippines (national) figure.
+// "Latest" = the last month inside the date slicer; lows and peaks are within the slicer range.
 
 // ---------- Calendar (Modeling > New table) ----------
 // Calendar =
@@ -18,7 +19,7 @@
 // ---------- Helpers ----------
 Selected Region Key = IF ( HASONEVALUE ( Region[region_key] ), VALUES ( Region[region_key] ), "PH" )
 
-Latest Month = CALCULATE ( MAX ( Inflation[month] ), REMOVEFILTERS () )
+Latest Month = CALCULATE ( MAX ( Inflation[month] ), REMOVEFILTERS ( Region ) )
 
 Year Ago Month = EDATE ( [Latest Month], -12 )
 
@@ -39,7 +40,7 @@ Rice Price Change YoY % = DIVIDE ( [Rice Price (Latest)] - [Rice Price (Year Ago
 
 Rice Price (Low) =
 VAR k = [Selected Region Key]
-RETURN CALCULATE ( MIN ( RicePrice[price_php_kg] ), REMOVEFILTERS ( 'Calendar' ), Region[region_key] = k )
+RETURN CALCULATE ( MIN ( RicePrice[price_php_kg] ), Region[region_key] = k )
 
 // ---------- Inflation (PSA CPI, % vs a year earlier) ----------
 Headline Inflation =
@@ -115,7 +116,10 @@ RETURN CALCULATE ( [Peso Purchasing Power], REMOVEFILTERS ( 'Calendar' ), 'Calen
 // ---------- GDP (PSA, real growth % vs same quarter a year earlier) ----------
 GDP Growth = AVERAGE ( GDP[gdp_growth_pct] )
 
-Latest GDP Quarter = CALCULATE ( MAX ( GDP[quarter_start] ), REMOVEFILTERS () )
+// Last quarter that starts by the latest month (ignores the From date, so a short range still has a quarter)
+Latest GDP Quarter =
+VAR m = [Latest Month]
+RETURN CALCULATE ( MAX ( GDP[quarter_start] ), REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] <= m )
 
 GDP Growth (Latest) =
 VAR q = [Latest GDP Quarter]
@@ -135,10 +139,10 @@ RETURN CALCULATE ( MAX ( GDP[quarter] ), REMOVEFILTERS (), GDP[quarter_start] = 
 Hunger Rate = AVERAGE ( Hunger[hunger_pct] )
 
 Hunger Rate (Latest) =
-VAR s = CALCULATE ( MAX ( Hunger[month] ), REMOVEFILTERS () )
-RETURN CALCULATE ( [Hunger Rate], REMOVEFILTERS (), Hunger[month] = s )
+VAR s = MAX ( Hunger[month] )
+RETURN CALCULATE ( [Hunger Rate], Hunger[month] = s )
 
-Hunger Rate (Low) = CALCULATE ( MIN ( Hunger[hunger_pct] ), REMOVEFILTERS () )
+Hunger Rate (Low) = MIN ( Hunger[hunger_pct] )
 
 // ---------- NCR wage vs rice ----------
 // Wage order in force mid-month (orders take effect mid-month)
@@ -156,11 +160,8 @@ VAR m = [Latest Month]
 RETURN CALCULATE ( [Kg Rice per NCR Wage], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] = m )
 
 Kg Rice per NCR Wage (Peak) =
-VAR lastM = [Latest Month]
-VAR months = CALCULATETABLE ( VALUES ( 'Calendar'[Month Start] ), REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Date] <= lastM )
-RETURN
     MAXX (
-        months,
+        VALUES ( 'Calendar'[Month Start] ),
         VAR ms = 'Calendar'[Month Start]
         RETURN CALCULATE ( [Kg Rice per NCR Wage], REMOVEFILTERS ( 'Calendar' ), 'Calendar'[Month Start] = ms )
     )

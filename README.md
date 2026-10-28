@@ -141,7 +141,7 @@ Apply the theme (**View → Themes → Browse** → `theme.json`), and put `logo
 
 **Interactivity**
 - **Cross-highlighting:** click a region in the bar chart and the table and cards follow.
-- **Slicers:** island group (page 4) and a `Calendar[Month]` range slider (pages 1–2).
+- **Slicers:** island group (page 4) and a `Calendar[Month Start]` date-range slicer (pages 1–3, already in the project). Cards show the slicer's last month vs 12 months earlier; lows and peaks are within the range, as in the web dashboard. To share one range across pages: View → Sync slicers.
 - **Drill-through:** add `Region[region]` to a detail page's Drill-through well, then right-click a region → Drill through.
 - **Report-page tooltip** on the bar chart showing that region's rice price trend.
 - **Navigation:** Insert → Buttons → Navigator → Page navigator, for the story flow 1 → 2 → 3 → 4.

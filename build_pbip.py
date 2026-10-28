@@ -158,11 +158,13 @@ def container(x, y, w, h, sv, z):
 
 M = "_Measures"
 month = ("Calendar", "Month Start")
+# Same date slicer on pages 1-3: the cards show its last month (see measures.dax)
+slicer_dates = lambda: visual("slicer", 920, 10, 340, 60, {"Values": [month]}, "Date range")
 cards = lambda items, y=80: [visual("card", 20 + i * 250, y, 240, 110, {"Values": [(M, f)]}, t) for i, (f, t) in enumerate(items)]
 
 pages = [
     ("1 · Bigger picture", [
-        textbox(20, 10, 1240, 60, "Growth is slowing, the dollar is strong, and inflation is back"),
+        textbox(20, 10, 880, 60, "Growth is slowing, the dollar is strong, and inflation is back"), slicer_dates(),
         *cards([("GDP Growth (Latest)", "GDP growth, latest quarter (%)"), ("USD PHP (Latest)", "Pesos per US dollar"),
                 ("Peso Weakening YoY %", "Peso weaker vs a year ago"), ("Headline Inflation (Latest)", "Headline inflation (%)"),
                 ("Peso Purchasing Power (Latest)", "Purchasing power of ₱1 (2018 = 1)")]),
@@ -171,7 +173,7 @@ pages = [
         visual("lineChart", 860, 210, 400, 490, {"Category": [month], "Y": [(M, "Headline Inflation"), (M, "Food Inflation")]}, "Inflation: headline vs food (%), BSP target 2–4%"),
     ]),
     ("2 · The rice shock", [
-        textbox(20, 10, 1240, 60, "Import policy swung rice prices down, then sharply up"),
+        textbox(20, 10, 880, 60, "Import policy swung rice prices down, then sharply up"), slicer_dates(),
         *cards([("Rice Price (Latest)", "Rice, regular-milled (₱/kg)"), ("Rice Price Change YoY %", "Rice price vs a year ago"),
                 ("Rice Inflation (Latest)", "Rice inflation (%)"), ("Kg Rice per NCR Wage (Latest)", "Kg of rice per NCR wage day"),
                 ("Kg Rice per NCR Wage (Peak)", "Best point (kg)")]),
@@ -180,8 +182,8 @@ pages = [
         visual("tableEx", 20, 555, 1240, 150, {"Values": [("Events", "date"), ("Events", "event")]}, "What changed: rice import policy"),
     ]),
     ("3 · Hunger", [
-        textbox(20, 10, 1240, 60, "Hunger stays stubbornly high"),
-        *cards([("Hunger Rate (Latest)", "Families going hungry, latest SWS (%)"), ("Hunger Rate (Low)", "Lowest since Mar 2025 (%)")]),
+        textbox(20, 10, 880, 60, "Hunger stays stubbornly high"), slicer_dates(),
+        *cards([("Hunger Rate (Latest)", "Families going hungry, latest SWS (%)"), ("Hunger Rate (Low)", "Lowest in the selected range (%)")]),
         visual("clusteredColumnChart", 20, 210, 1240, 490, {"Category": [("Hunger", "month")], "Y": [(M, "Hunger Rate")]}, "Families experiencing involuntary hunger, per SWS survey (%)"),
     ]),
     ("4 · Where it hurts most", [
